@@ -9,20 +9,20 @@ public class HomeViewModel extends ViewModel {
 
     private final MutableLiveData<String> classifiedText;
 
-    private final MutableLiveData<Bitmap> imageBitmap;
+    private final MutableLiveData<Bitmap> thumbnailBitmap;
 
     public HomeViewModel() {
         classifiedText = new MutableLiveData<>();
         classifiedText.setValue("-");
 
-        imageBitmap = new MutableLiveData<>();
+        thumbnailBitmap = new MutableLiveData<>();
     }
 
     public MutableLiveData<String> getClassifiedText() {
         return classifiedText;
     }
 
-    public MutableLiveData<Bitmap> getImageBitmap() {
-        return imageBitmap;
+    public MutableLiveData<Bitmap> getThumbnailBitmap() {
+        return thumbnailBitmap;
     }
 }

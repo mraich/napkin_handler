@@ -3,6 +3,7 @@ package com.mrichard.napkin_handler.ui.home;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -44,7 +45,7 @@ public class HomeFragment extends Fragment {
         });
 
         // Image showing.
-        homeViewModel.getImageBitmap().observe(getViewLifecycleOwner(), binding.imageViewPicture::setImageBitmap);
+        homeViewModel.getThumbnailBitmap().observe(getViewLifecycleOwner(), binding.imageViewPicture::setImageBitmap);
 
         // Image class name binding.
         homeViewModel.getClassifiedText().observe(getViewLifecycleOwner(), binding.textviewClassified::setText);
@@ -73,8 +74,13 @@ public class HomeFragment extends Fragment {
                     try {
                         Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), dat);
 
+                        // Creating thumbnail.
+                        int dimension = Math.min(imageBitmap.getWidth(), imageBitmap.getHeight());
+                        Bitmap thumbnailImage = ThumbnailUtils.extractThumbnail(imageBitmap, dimension, dimension);
+
                         // Show image through the homeViewModel.
-                        homeViewModel.getImageBitmap().setValue(imageBitmap);
+                        homeViewModel.getThumbnailBitmap().setValue(thumbnailImage);
+
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
