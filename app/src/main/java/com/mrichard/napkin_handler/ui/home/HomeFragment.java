@@ -3,6 +3,7 @@ package com.mrichard.napkin_handler.ui.home;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.Image;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.mrichard.napkin_handler.data.image_recognition.ImageRecognizer;
 import com.mrichard.napkin_handler.databinding.FragmentHomeBinding;
 
 import java.io.IOException;
@@ -27,9 +29,13 @@ public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
 
+    private ImageRecognizer imageRecognizer;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+
+        imageRecognizer = new ImageRecognizer(getContext());
 
         // Inflating fragment.
         binding = FragmentHomeBinding.inflate(inflater, container, false);
@@ -81,6 +87,8 @@ public class HomeFragment extends Fragment {
                         // Show image through the homeViewModel.
                         homeViewModel.getThumbnailBitmap().setValue(thumbnailImage);
 
+                        String classifiedName = imageRecognizer.recognize(imageBitmap);
+                        homeViewModel.getClassifiedText().setValue(classifiedName);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
