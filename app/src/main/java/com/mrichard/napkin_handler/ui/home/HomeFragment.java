@@ -118,15 +118,45 @@ public class HomeFragment extends Fragment {
 
     // Processing image bitmap.
     private void processImageBitmap(Bitmap imageBitmap) {
-        // Creating thumbnail.
-        int dimension = Math.min(imageBitmap.getWidth(), imageBitmap.getHeight());
-        Bitmap thumbnailImage = ThumbnailUtils.extractThumbnail(imageBitmap, dimension, dimension);
+        // We do the computation in a new thread.
+        Thread processorThread = new Thread() {
 
-        // Show image through the homeViewModel.
-        homeViewModel.getThumbnailBitmap().setValue(thumbnailImage);
+            @Override
+            public void run() {
+                super.run();
 
-        String classifiedName = imageRecognizer.recognize(imageBitmap);
-        homeViewModel.getClassifiedText().setValue(classifiedName);
+                // Creating thumbnail.
+                int dimension = Math.min(imageBitmap.getWidth(), imageBitmap.getHeight());
+                Bitmap thumbnailImage = ThumbnailUtils.extractThumbnail(imageBitmap, dimension, dimension);
+
+                // We are on a separate thread and we have to do any changes
+                // on the GUI on the UI thread.
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Show image through the homeViewModel.
+                        homeViewModel.getThumbnailBitmap().setValue(thumbnailImage);
+
+                        // We don't know the classified name for now.
+                        homeViewModel.getClassifiedText().setValue("");
+                    }
+                });
+
+                // Doing the actual computation of the image processing.
+                String classifiedName = imageRecognizer.recognize(imageBitmap);
+
+                // We have to do it on the UI thread again.
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        homeViewModel.getClassifiedText().setValue(classifiedName);
+                    }
+                });
+            }
+
+        };
+        // Starting the thread.
+        processorThread.start();
     }
 
 }
