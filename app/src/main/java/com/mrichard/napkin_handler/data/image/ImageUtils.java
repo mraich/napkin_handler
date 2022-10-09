@@ -1,6 +1,9 @@
 package com.mrichard.napkin_handler.data.image;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
+import android.provider.OpenableColumns;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,6 +32,28 @@ public class ImageUtils {
         );
 
         return image;
+    }
+
+    public String UriToFilePath(Context context, Uri uri) {
+        String uriString = uri.toString();
+
+        if (uriString.startsWith("content://")) {
+            Cursor cursor = null;
+            try {
+                cursor = context.getContentResolver().query(uri, null, null, null, null);
+                if (cursor != null && cursor.moveToFirst()) {
+                    int index = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                    if (index > 0) {
+                        return cursor.getString(index);
+                    }
+                }
+            } finally {
+                cursor.close();
+            }
+        } else if (uriString.startsWith("file://")) {
+            return new File(uriString).getAbsolutePath();
+        }
+        return "";
     }
 
 }
