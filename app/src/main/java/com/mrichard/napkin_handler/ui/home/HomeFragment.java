@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.Image;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
@@ -19,6 +20,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -61,9 +63,23 @@ public class HomeFragment extends Fragment {
                 ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ) {
                 ActivityCompat.requestPermissions(getActivity(), new String[] { Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE }, 110);
             } else {
-                // We have permission to use the camera.
-                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                cameraActivityResultLauncher.launch(cameraIntent);
+                try {
+                    // We have permission to use the camera.
+                    Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+                    // We will save the picture in this UUID file.
+                    File imageFile = imageUtils.createImageFile(getContext());
+                    Uri photoURI = FileProvider.getUriForFile(this.getContext(),
+                            "com.mrichard.napkin_handler.fileprovider",
+                            imageFile);
+                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                    // ViewModel needs it to know.
+                    homeViewModel.getShowedPictureFile().setValue(imageFile);
+
+                    cameraActivityResultLauncher.launch(cameraIntent);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -119,7 +135,8 @@ public class HomeFragment extends Fragment {
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
-                    Bitmap imageBitmap = (Bitmap) result.getData().getExtras().get("data");
+                    String filePath = showedPicture.getAbsolutePath();
+                    Bitmap imageBitmap = BitmapFactory.decodeFile(filePath);
 
                     processImageBitmap(imageBitmap);
                 }
