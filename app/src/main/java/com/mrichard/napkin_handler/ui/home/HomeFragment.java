@@ -26,6 +26,7 @@ import com.mrichard.napkin_handler.data.image.ImageUtils;
 import com.mrichard.napkin_handler.data.image_recognition.ImageRecognizer;
 import com.mrichard.napkin_handler.databinding.FragmentHomeBinding;
 
+import java.io.File;
 import java.io.IOException;
 
 public class HomeFragment extends Fragment {
@@ -37,6 +38,8 @@ public class HomeFragment extends Fragment {
     private ImageRecognizer imageRecognizer;
 
     private ImageUtils imageUtils;
+
+    private File showedPicture;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -72,6 +75,9 @@ public class HomeFragment extends Fragment {
                 // We will save the picture in this UUID file.
                 File imageFile = imageUtils.createImageFile(getContext());
                 galleryIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageFile);
+                // ViewModel needs it to know.
+                homeViewModel.getShowedPictureFile().setValue(imageFile);
+
                 galleryActivityResultLauncher.launch(galleryIntent);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -84,6 +90,9 @@ public class HomeFragment extends Fragment {
         // Image class name binding.
         homeViewModel.getClassifiedText().observe(getViewLifecycleOwner(), binding.textviewClassified::setText);
 
+        // Image for saving.
+        homeViewModel.getShowedPictureFile().observe(getViewLifecycleOwner(), this::onShowedPictureFileChanged);
+
         return root;
     }
 
@@ -91,6 +100,15 @@ public class HomeFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    /**
+     * The showed picture is changed.
+     *
+     * @param showedPicture
+     */
+    protected void onShowedPictureFileChanged(File showedPicture) {
+        this.showedPicture = showedPicture;
     }
 
     /**
