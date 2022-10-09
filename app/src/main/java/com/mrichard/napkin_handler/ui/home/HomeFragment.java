@@ -22,6 +22,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.mrichard.napkin_handler.data.image.ImageUtils;
 import com.mrichard.napkin_handler.data.image_recognition.ImageRecognizer;
 import com.mrichard.napkin_handler.databinding.FragmentHomeBinding;
 
@@ -35,11 +36,15 @@ public class HomeFragment extends Fragment {
 
     private ImageRecognizer imageRecognizer;
 
+    private ImageUtils imageUtils;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
 
         imageRecognizer = new ImageRecognizer(getContext());
+
+        imageUtils = new ImageUtils();
 
         // Inflating fragment.
         binding = FragmentHomeBinding.inflate(inflater, container, false);
@@ -61,8 +66,16 @@ public class HomeFragment extends Fragment {
 
         // We open the gallery.
         binding.buttonLaunchGallery.setOnClickListener(view -> {
-            Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            galleryActivityResultLauncher.launch(galleryIntent);
+            try {
+                Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+                // We will save the picture in this UUID file.
+                File imageFile = imageUtils.createImageFile(getContext());
+                galleryIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageFile);
+                galleryActivityResultLauncher.launch(galleryIntent);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         });
 
         // Image showing.
