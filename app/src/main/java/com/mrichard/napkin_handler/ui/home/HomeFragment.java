@@ -42,12 +42,9 @@ public class HomeFragment extends Fragment {
         View root = binding.getRoot();
 
         // We open the gallery.
-        binding.buttonLaunchGallery.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                galleryActivityResultLauncher.launch(galleryIntent);
-            }
+        binding.buttonLaunchGallery.setOnClickListener(view -> {
+            Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            galleryActivityResultLauncher.launch(galleryIntent);
         });
 
         // Image showing.
