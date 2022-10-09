@@ -125,7 +125,7 @@ public class HomeFragment extends Fragment {
             public void run() {
                 super.run();
 
-                // Creating thumbnail.
+                // Creating the thumbnail image.
                 int dimension = Math.min(imageBitmap.getWidth(), imageBitmap.getHeight());
                 Bitmap thumbnailImage = ThumbnailUtils.extractThumbnail(imageBitmap, dimension, dimension);
 
@@ -155,6 +155,7 @@ public class HomeFragment extends Fragment {
             }
 
         };
+
         // Starting the thread.
         processorThread.start();
     }
