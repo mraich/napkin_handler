@@ -36,6 +36,23 @@ public class ImageRecognizer
     private TensorProcessor probabilityProcessor;
     private TensorBuffer probabilityBuffer;
 
+    // The next attributes are protected as I can inherit this class
+    // in the future with a different neural net too.
+
+    // Information on neural net from assets.
+    protected String NEURAL_NET_TFLITE = "image_recognizer/image_recognizer.tflite";
+    // Information on neural net output from assets.
+    // It has to have the same line count as the NEURAL_NET_TFILE file output.
+    protected String NEURAL_NET_TFLITE_LABELS = "image_recognizer/image_recognizer_labels.txt";
+
+    // Information on input determined by NEURAL_NET_TFLITE file.
+    protected int INPUT_IMAGE_WIDTH = 224;
+    protected int INPUT_IMAGE_HEIGHT = 224;
+
+    // Information on output determined by NEURAL_NET_TFLITE file.
+    protected int OUTPUT_COUNT = 1000;
+    protected DataType OUTPUT_DATA_TYPE = DataType.FLOAT32;
+
     public ImageRecognizer(Context context) {
         this.context = context;
 
@@ -45,7 +62,7 @@ public class ImageRecognizer
 
             imageProcessor =
                 new ImageProcessor.Builder()
-                    .add(new ResizeOp(224, 224, ResizeOp.ResizeMethod.BILINEAR))
+                    .add(new ResizeOp(INPUT_IMAGE_HEIGHT, INPUT_IMAGE_WIDTH, ResizeOp.ResizeMethod.BILINEAR))
                     .build();
             }
 
@@ -54,7 +71,7 @@ public class ImageRecognizer
         probabilityProcessor =
                 new TensorProcessor.Builder().add(new NormalizeOp(0, 255)).build();
         probabilityBuffer =
-                TensorBuffer.createFixedSize(new int[] { 1, 1000 }, DataType.FLOAT32);
+                TensorBuffer.createFixedSize(new int[] { 1, OUTPUT_COUNT }, OUTPUT_DATA_TYPE);
 
     }
 
@@ -97,7 +114,7 @@ public class ImageRecognizer
     private MappedByteBuffer loadModelFile()
     {
         try {
-            AssetFileDescriptor assetFileDescriptor = context.getAssets().openFd("image_recognizer/image_recognizer.tflite");
+            AssetFileDescriptor assetFileDescriptor = context.getAssets().openFd(NEURAL_NET_TFLITE);
             FileInputStream fileInputStream = new FileInputStream(assetFileDescriptor.getFileDescriptor());
             FileChannel fileChannel = fileInputStream.getChannel();
 
@@ -115,7 +132,7 @@ public class ImageRecognizer
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(
-                    new InputStreamReader(context.getAssets().open("image_recognizer/image_recognizer_labels.txt")));
+                    new InputStreamReader(context.getAssets().open(NEURAL_NET_TFLITE_LABELS)));
 
             String line;
             while ((line = reader.readLine()) != null) {
