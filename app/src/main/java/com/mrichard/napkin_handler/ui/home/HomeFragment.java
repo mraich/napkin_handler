@@ -94,4 +94,18 @@ public class HomeFragment extends Fragment {
                     }
                 }
             });
+
+    // Processing image bitmap.
+    private void processImageBitmap(Bitmap imageBitmap) {
+        // Creating thumbnail.
+        int dimension = Math.min(imageBitmap.getWidth(), imageBitmap.getHeight());
+        Bitmap thumbnailImage = ThumbnailUtils.extractThumbnail(imageBitmap, dimension, dimension);
+
+        // Show image through the homeViewModel.
+        homeViewModel.getThumbnailBitmap().setValue(thumbnailImage);
+
+        String classifiedName = imageRecognizer.recognize(imageBitmap);
+        homeViewModel.getClassifiedText().setValue(classifiedName);
+    }
+
 }
