@@ -4,16 +4,24 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.mrichard.napkin_handler.data.db.NapkinDB;
+import com.mrichard.napkin_handler.data.model.picture.Picture;
+
+import java.util.List;
+
 public class DashboardViewModel extends ViewModel {
 
-    private final MutableLiveData<String> mText;
+    private NapkinDB napkinDB;
 
     public DashboardViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("This is dashboard fragment");
     }
 
-    public LiveData<String> getText() {
-        return mText;
+    public void setNapkinDB(NapkinDB napkinDB) {
+        this.napkinDB = napkinDB;
     }
+
+    public LiveData<List<Picture>> getPictures() {
+        return napkinDB.pictureDao().getAll();
+    }
+
 }
