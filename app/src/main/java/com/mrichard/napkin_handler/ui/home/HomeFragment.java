@@ -24,14 +24,18 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.mrichard.napkin_handler.data.db.NapkinDB;
 import com.mrichard.napkin_handler.data.image.ImageUtils;
 import com.mrichard.napkin_handler.data.image_recognition.ImageRecognizer;
+import com.mrichard.napkin_handler.data.model.picture.Picture;
 import com.mrichard.napkin_handler.databinding.FragmentHomeBinding;
 
 import java.io.File;
 import java.io.IOException;
 
 public class HomeFragment extends Fragment {
+
+    private NapkinDB napkinDB;
 
     private FragmentHomeBinding binding;
 
@@ -46,6 +50,9 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+
+        // Antipattern, but works.
+        napkinDB = NapkinDB.GetInstance(getContext());
 
         imageRecognizer = new ImageRecognizer(getContext());
 
