@@ -44,8 +44,6 @@ public class HomeFragment extends Fragment {
 
     private ImageUtils imageUtils;
 
-    private File showedPicture;
-
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
@@ -80,7 +78,7 @@ public class HomeFragment extends Fragment {
                             imageFile);
                     cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                     // ViewModel needs it to know.
-                    homeViewModel.getShowedPictureFile().setValue(imageFile);
+                    homeViewModel.setShowedPictureFile(imageFile);
 
                     cameraActivityResultLauncher.launch(cameraIntent);
                 } catch (IOException e) {
@@ -91,19 +89,9 @@ public class HomeFragment extends Fragment {
 
         // We open the gallery.
         binding.buttonLaunchGallery.setOnClickListener(view -> {
-            try {
-                Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 
-                // We will save the picture in this UUID file.
-                File imageFile = imageUtils.createImageFile(getContext());
-                galleryIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageFile);
-                // ViewModel needs it to know.
-                homeViewModel.getShowedPictureFile().setValue(imageFile);
-
-                galleryActivityResultLauncher.launch(galleryIntent);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            galleryActivityResultLauncher.launch(galleryIntent);
         });
 
         // Image showing.
@@ -111,9 +99,6 @@ public class HomeFragment extends Fragment {
 
         // Image class name binding.
         homeViewModel.getClassifiedText().observe(getViewLifecycleOwner(), binding.textviewClassified::setText);
-
-        // Image for saving.
-        homeViewModel.getShowedPictureFile().observe(getViewLifecycleOwner(), this::onShowedPictureFileChanged);
 
         return root;
     }
@@ -125,15 +110,6 @@ public class HomeFragment extends Fragment {
     }
 
     /**
-     * The showed picture is changed.
-     *
-     * @param showedPicture
-     */
-    protected void onShowedPictureFileChanged(File showedPicture) {
-        this.showedPicture = showedPicture;
-    }
-
-    /**
      * Starting camera activity to capture picture.
      * Ugly AF.
      */
@@ -141,7 +117,7 @@ public class HomeFragment extends Fragment {
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
-                    String filePath = showedPicture.getAbsolutePath();
+                    String filePath = homeViewModel.getShowedPictureFile().getAbsolutePath();
                     Bitmap imageBitmap = BitmapFactory.decodeFile(filePath);
 
                     processImageBitmap(imageBitmap);
@@ -157,16 +133,10 @@ public class HomeFragment extends Fragment {
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
-                    Intent data = result.getData();
-                    Uri dat = data.getData();
+                    homeViewModel.setShowedPictureFile(new File(imageUtils.saveFile(getContext(), result.getData().getData())));
+                    Bitmap imageBitmap = BitmapFactory.decodeFile(homeViewModel.getShowedPictureFile().getAbsolutePath());
 
-                    try {
-                        Bitmap imageBitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), dat);
-
-                        processImageBitmap(imageBitmap);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    processImageBitmap(imageBitmap);
                 }
             });
 
@@ -211,7 +181,7 @@ public class HomeFragment extends Fragment {
                 // It needs to run on a separate thread unless we get this nice error below. :)
                 // java.lang.IllegalStateException: Cannot access database on the main thread since it may potentially lock the UI for a long period of time.
                 napkinDB.pictureDao().insert(
-                    new Picture(showedPicture.getAbsolutePath(), classifiedName)
+                    new Picture(homeViewModel.getShowedPictureFile().getAbsolutePath(), classifiedName)
                 );
             }
 

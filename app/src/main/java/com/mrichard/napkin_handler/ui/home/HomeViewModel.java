@@ -13,15 +13,13 @@ public class HomeViewModel extends ViewModel {
 
     private final MutableLiveData<Bitmap> thumbnailBitmap;
 
-    private final MutableLiveData<File> showedPictureFile;
+    private File showedPictureFile;
 
     public HomeViewModel() {
         classifiedText = new MutableLiveData<>();
         classifiedText.setValue("-");
 
         thumbnailBitmap = new MutableLiveData<>();
-
-        showedPictureFile = new MutableLiveData<>();
     }
 
     public MutableLiveData<String> getClassifiedText() {
@@ -32,6 +30,10 @@ public class HomeViewModel extends ViewModel {
         return thumbnailBitmap;
     }
 
-    public MutableLiveData<File> getShowedPictureFile() { return showedPictureFile; }
+    public void setShowedPictureFile(File showedPictureFile) {
+        this.showedPictureFile = showedPictureFile;
+    }
+
+    public File getShowedPictureFile() { return showedPictureFile; }
 
 }
