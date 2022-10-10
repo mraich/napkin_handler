@@ -8,6 +8,7 @@ import androidx.room.RoomDatabase;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import com.mrichard.napkin_handler.data.model.picture.IPictureDao;
 import com.mrichard.napkin_handler.data.model.picture.Picture;
 
 @Database(
@@ -24,6 +25,8 @@ public abstract class
 {
 
     protected static final String DB_NAME = "NapkinDB";
+
+    public abstract IPictureDao pictureDao();
 
     private static NapkinDB INSTANCE;
 
