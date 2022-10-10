@@ -207,6 +207,13 @@ public class HomeFragment extends Fragment {
                         homeViewModel.getClassifiedText().setValue(classifiedName);
                     }
                 });
+
+                // Saving the picture and its classification.
+                // It needs to run on a separate thread unless we get this nice error below. :)
+                // java.lang.IllegalStateException: Cannot access database on the main thread since it may potentially lock the UI for a long period of time.
+                napkinDB.pictureDao().insert(
+                    new Picture(showedPicture.getAbsolutePath(), classifiedName)
+                );
             }
 
         };
