@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.core.content.FileProvider;
@@ -16,6 +17,7 @@ import com.mrichard.napkin_handler.databinding.PictureGalleryItemBinding;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class PictureGalleryAdapter extends RecyclerView.Adapter<PictureGalleryViewHolder> {
@@ -63,7 +65,7 @@ public class PictureGalleryAdapter extends RecyclerView.Adapter<PictureGalleryVi
         binding.imageViewClassified.setText(picture.getAttributes());
 
         // Sharing the picture.
-        binding.imageViewPicture.setOnClickListener(view -> sharePicture(picture));
+        binding.imageViewPicture.setOnClickListener(view -> sharePictures(Collections.singletonList(picture)));
     }
 
     @Override
@@ -72,17 +74,20 @@ public class PictureGalleryAdapter extends RecyclerView.Adapter<PictureGalleryVi
     }
 
     /**
-     * Sharing the picture.
+     * Sharing the pictures.
      *
-     * @param picture
+     * @param pictures
      */
-    private void sharePicture(Picture picture) {
-        Uri pictureUri = FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".fileprovider", new File(picture.getPath()));
+    private void sharePictures(List<Picture> pictures) {
+        ArrayList<Uri> pictureUris = new ArrayList<>();
+        for (Picture picture: pictures) {
+            pictureUris.add(FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".fileprovider", new File(picture.getPath())));
+        }
 
-        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+        Intent sharingIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
         sharingIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
         sharingIntent.setType("image/*");
-        sharingIntent.putExtra(Intent.EXTRA_STREAM, pictureUri);
+        sharingIntent.putExtra(Intent.EXTRA_STREAM, pictureUris);
 
         context.startActivity(Intent.createChooser(sharingIntent, "Share Image Using"));
     }
