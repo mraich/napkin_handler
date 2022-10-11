@@ -16,12 +16,15 @@ import com.mrichard.napkin_handler.databinding.FragmentDashboardBinding;
 import com.mrichard.napkin_handler.ui.dashboard.adapter.PictureGalleryAdapter;
 
 import java.util.List;
+import java.util.Set;
 
 public class DashboardFragment extends Fragment {
 
     private FragmentDashboardBinding binding;
 
     private PictureGalleryAdapter pictureGalleryAdapter;
+
+    private Set<Long> selectedPictures;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -39,6 +42,8 @@ public class DashboardFragment extends Fragment {
 
         dashboardViewModel.getPictures().observe(getViewLifecycleOwner(), this::onPicturesChanged);
 
+        dashboardViewModel.selectedPictures().observe(getViewLifecycleOwner(), this::onSelectedPicturesChanged);
+
         return root;
     }
 
@@ -52,6 +57,10 @@ public class DashboardFragment extends Fragment {
         pictureGalleryAdapter.setPictures(pictures);
 
         pictureGalleryAdapter.notifyDataSetChanged();
+    }
+
+    private void onSelectedPicturesChanged(Set<Long> selectedPictures) {
+        this.selectedPictures = selectedPictures;
     }
 
 }
