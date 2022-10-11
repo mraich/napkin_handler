@@ -40,6 +40,9 @@ public class DashboardViewModel extends ViewModel {
         } else {
             selectedPictures.getValue().remove(id);
         }
+
+        // Refreshing. :)
+        selectedPictures.setValue(selectedPictures.getValue());
     }
 
 }
