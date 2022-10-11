@@ -1,7 +1,6 @@
 package com.mrichard.napkin_handler.ui.dashboard;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.mrichard.napkin_handler.data.db.NapkinDB;
