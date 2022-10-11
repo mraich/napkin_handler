@@ -89,9 +89,14 @@ public class HomeFragment extends Fragment {
 
         // We open the gallery.
         binding.buttonLaunchGallery.setOnClickListener(view -> {
-            Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            if (
+                ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ) {
+                ActivityCompat.requestPermissions(getActivity(), new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE }, 110);
+            } else {
+                Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 
-            galleryActivityResultLauncher.launch(galleryIntent);
+                galleryActivityResultLauncher.launch(galleryIntent);
+            }
         });
 
         // Image showing.
