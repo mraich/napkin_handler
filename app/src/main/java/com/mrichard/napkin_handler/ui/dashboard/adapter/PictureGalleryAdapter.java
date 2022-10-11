@@ -1,12 +1,13 @@
 package com.mrichard.napkin_handler.ui.dashboard.adapter;
 
 import android.content.Context;
-import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.mrichard.napkin_handler.R;
 import com.mrichard.napkin_handler.data.model.picture.Picture;
 import com.mrichard.napkin_handler.databinding.PictureGalleryItemBinding;
 
@@ -48,7 +49,13 @@ public class PictureGalleryAdapter extends RecyclerView.Adapter<PictureGalleryVi
     public void onBindViewHolder(final PictureGalleryViewHolder holder, int position) {
         final Picture picture = pictures.get(position);
 
-        binding.imageViewPicture.setImageBitmap(BitmapFactory.decodeFile(picture.getPath()));
+        Glide
+            .with(context)
+            .load(picture.getPath())
+            .centerCrop()
+            .placeholder(R.drawable.ic_launcher_background)
+            .into(binding.imageViewPicture);
+
         binding.imageViewClassified.setText(picture.getAttributes());
     }
 
