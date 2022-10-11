@@ -15,15 +15,11 @@ import java.util.List;
 
 public class PictureGalleryAdapter extends RecyclerView.Adapter<PictureGalleryViewHolder> {
 
-    private Context mContext;
-
     private PictureGalleryItemBinding binding;
 
     private List<Picture> pictures;
 
     public PictureGalleryAdapter(Context context) {
-        this.mContext = context;
-
         this.pictures = new ArrayList<>();
     }
 
@@ -37,14 +33,6 @@ public class PictureGalleryAdapter extends RecyclerView.Adapter<PictureGalleryVi
             e.printStackTrace();
         }
         return null;
-    }
-
-    public List<Picture> getPictures() {
-        return pictures;
-    }
-
-    public void addPicture(Picture picture) {
-        pictures.add(picture);
     }
 
     public void setPictures(List<Picture> pictures)
