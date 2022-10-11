@@ -60,6 +60,10 @@ public class Picture
         }
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public String getPath() {
         return path;
     }
