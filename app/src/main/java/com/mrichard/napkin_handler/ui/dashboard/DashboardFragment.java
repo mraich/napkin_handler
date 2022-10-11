@@ -40,6 +40,10 @@ public class DashboardFragment extends Fragment {
         binding.pictureGallery.setLayoutManager(new GridLayoutManager(getActivity().getApplicationContext(), 2));
         binding.pictureGallery.setAdapter(pictureGalleryAdapter);
 
+        binding.buttonSharePictures.setOnClickListener(view -> {
+            sharePictures(selectedPictures);
+        });
+
         dashboardViewModel.getPictures().observe(getViewLifecycleOwner(), this::onPicturesChanged);
 
         dashboardViewModel.selectedPictures().observe(getViewLifecycleOwner(), this::onSelectedPicturesChanged);
@@ -61,6 +65,30 @@ public class DashboardFragment extends Fragment {
 
     private void onSelectedPicturesChanged(Set<Long> selectedPictures) {
         this.selectedPictures = selectedPictures;
+    }
+
+    /**
+     * Sharing the pictures.
+     *
+     * @param pictures
+     */
+    private void sharePictures(Set<Long> pictures) {
+        Thread thread = new Thread(() -> {
+            NapkinDB napkinDB = NapkinDB.GetInstance(getContext());
+
+            ArrayList<Uri> pictureUris = new ArrayList<>();
+            for (Long pictureId: pictures) {
+                pictureUris.add(FileProvider.getUriForFile(getContext(), getActivity().getApplicationContext().getPackageName() + ".fileprovider", new File(napkinDB.pictureDao().getPicture(pictureId).getPath())));
+            }
+
+            Intent sharingIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+            sharingIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+            sharingIntent.setType("image/*");
+            sharingIntent.putExtra(Intent.EXTRA_STREAM, pictureUris);
+
+            startActivity(Intent.createChooser(sharingIntent, "Share Image Using"));
+        });
+        thread.start();
     }
 
 }
