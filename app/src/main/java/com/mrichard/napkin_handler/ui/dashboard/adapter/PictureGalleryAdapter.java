@@ -2,7 +2,6 @@ package com.mrichard.napkin_handler.ui.dashboard.adapter;
 
 import android.content.Context;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
