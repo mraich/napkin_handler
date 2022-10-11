@@ -12,9 +12,9 @@ import com.mrichard.napkin_handler.data.model.picture.Picture;
 import com.mrichard.napkin_handler.databinding.PictureGalleryItemBinding;
 import com.mrichard.napkin_handler.ui.dashboard.DashboardViewModel;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class PictureGalleryAdapter extends RecyclerView.Adapter<PictureGalleryViewHolder> {
 
@@ -25,6 +25,8 @@ public class PictureGalleryAdapter extends RecyclerView.Adapter<PictureGalleryVi
     private DashboardViewModel dashboardViewModel;
 
     private List<Picture> pictures;
+
+    private Set<Long> selectedPictures;
 
     public PictureGalleryAdapter(Context context, DashboardViewModel dashboardViewModel) {
         this.context = context;
@@ -51,9 +53,18 @@ public class PictureGalleryAdapter extends RecyclerView.Adapter<PictureGalleryVi
         this.pictures = pictures;
     }
 
+    public void setSelectedPictures(Set<Long> selectedPictures) {
+        this.selectedPictures = selectedPictures;
+    }
+
     @Override
     public void onBindViewHolder(final PictureGalleryViewHolder holder, int position) {
         final Picture picture = pictures.get(position);
+        if (selectedPictures != null && selectedPictures.contains(picture.getId())) {
+            binding.getRoot().setBackgroundColor(context.getResources().getColor(com.google.android.material.R.color.material_blue_grey_800));
+        } else {
+            binding.getRoot().setBackgroundColor(context.getResources().getColor(com.google.android.material.R.color.m3_ref_palette_white));
+        }
 
         Glide
             .with(context)

@@ -70,6 +70,9 @@ public class DashboardFragment extends Fragment {
 
     private void onSelectedPicturesChanged(Set<Long> selectedPictures) {
         this.selectedPictures = selectedPictures;
+
+        pictureGalleryAdapter.setSelectedPictures(selectedPictures);
+        pictureGalleryAdapter.notifyDataSetChanged();
     }
 
     /**
