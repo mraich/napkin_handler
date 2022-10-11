@@ -14,10 +14,10 @@ import com.bumptech.glide.Glide;
 import com.mrichard.napkin_handler.R;
 import com.mrichard.napkin_handler.data.model.picture.Picture;
 import com.mrichard.napkin_handler.databinding.PictureGalleryItemBinding;
+import com.mrichard.napkin_handler.ui.dashboard.DashboardViewModel;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class PictureGalleryAdapter extends RecyclerView.Adapter<PictureGalleryViewHolder> {
@@ -26,10 +26,14 @@ public class PictureGalleryAdapter extends RecyclerView.Adapter<PictureGalleryVi
 
     private PictureGalleryItemBinding binding;
 
+    private DashboardViewModel dashboardViewModel;
+
     private List<Picture> pictures;
 
-    public PictureGalleryAdapter(Context context) {
+    public PictureGalleryAdapter(Context context, DashboardViewModel dashboardViewModel) {
         this.context = context;
+
+        this.dashboardViewModel = dashboardViewModel;
 
         this.pictures = new ArrayList<>();
     }
@@ -64,8 +68,8 @@ public class PictureGalleryAdapter extends RecyclerView.Adapter<PictureGalleryVi
 
         binding.imageViewClassified.setText(picture.getAttributes());
 
-        // Sharing the picture.
-        binding.imageViewPicture.setOnClickListener(view -> sharePictures(Collections.singletonList(picture)));
+        // Clicking the picture.
+        binding.imageViewPicture.setOnClickListener(view -> dashboardViewModel.onClickPicture(picture.getId()));
     }
 
     @Override

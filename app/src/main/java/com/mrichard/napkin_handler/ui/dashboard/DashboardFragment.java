@@ -35,7 +35,7 @@ public class DashboardFragment extends Fragment {
         binding = FragmentDashboardBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        pictureGalleryAdapter = new PictureGalleryAdapter(getContext());
+        pictureGalleryAdapter = new PictureGalleryAdapter(getContext(), dashboardViewModel);
         binding.pictureGallery.setLayoutManager(new GridLayoutManager(getActivity().getApplicationContext(), 2));
         binding.pictureGallery.setAdapter(pictureGalleryAdapter);
 
