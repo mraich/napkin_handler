@@ -15,11 +15,15 @@ import java.util.List;
 
 public class PictureGalleryAdapter extends RecyclerView.Adapter<PictureGalleryViewHolder> {
 
+    private Context context;
+
     private PictureGalleryItemBinding binding;
 
     private List<Picture> pictures;
 
     public PictureGalleryAdapter(Context context) {
+        this.context = context;
+
         this.pictures = new ArrayList<>();
     }
 
