@@ -20,8 +20,6 @@ public class PictureGalleryAdapter extends RecyclerView.Adapter<PictureGalleryVi
 
     private Context context;
 
-    private PictureGalleryItemBinding binding;
-
     private DashboardViewModel dashboardViewModel;
 
     private List<Picture> pictures;
@@ -39,7 +37,7 @@ public class PictureGalleryAdapter extends RecyclerView.Adapter<PictureGalleryVi
     @Override
     public PictureGalleryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         try {
-            binding = PictureGalleryItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+            PictureGalleryItemBinding binding = PictureGalleryItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
 
             return new PictureGalleryViewHolder(binding);
         } catch (Exception e) {
@@ -61,9 +59,9 @@ public class PictureGalleryAdapter extends RecyclerView.Adapter<PictureGalleryVi
     public void onBindViewHolder(final PictureGalleryViewHolder holder, int position) {
         final Picture picture = pictures.get(position);
         if (selectedPictures != null && selectedPictures.contains(picture.getId())) {
-            binding.getRoot().setBackgroundColor(context.getResources().getColor(com.google.android.material.R.color.material_blue_grey_800));
+            holder.getBinding().getRoot().setBackgroundColor(context.getResources().getColor(com.google.android.material.R.color.material_blue_grey_800));
         } else {
-            binding.getRoot().setBackgroundColor(context.getResources().getColor(com.google.android.material.R.color.m3_ref_palette_white));
+            holder.getBinding().getRoot().setBackgroundColor(context.getResources().getColor(com.google.android.material.R.color.m3_ref_palette_white));
         }
 
         Glide
@@ -71,12 +69,12 @@ public class PictureGalleryAdapter extends RecyclerView.Adapter<PictureGalleryVi
             .load(picture.getPath())
             .centerCrop()
             .placeholder(R.drawable.ic_launcher_background)
-            .into(binding.imageViewPicture);
+            .into(holder.getBinding().imageViewPicture);
 
-        binding.imageViewClassified.setText(picture.getAttributes());
+        holder.getBinding().imageViewClassified.setText("" + picture.getAttributes());
 
         // Clicking the picture.
-        binding.imageViewPicture.setOnClickListener(view -> dashboardViewModel.onClickPicture(picture.getId()));
+        holder.getBinding().imageViewPicture.setOnClickListener(view -> dashboardViewModel.onClickPicture(picture.getId()));
     }
 
     @Override
