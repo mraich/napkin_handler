@@ -60,11 +60,8 @@ public class PictureGalleryAdapter extends RecyclerView.Adapter<PictureGalleryVi
     @Override
     public void onBindViewHolder(final PictureGalleryViewHolder holder, int position) {
         final Picture picture = pictures.get(position);
-        if (selectedPictures != null && selectedPictures.contains(picture.getId())) {
-            holder.getBinding().getRoot().setBackgroundColor(context.getResources().getColor(com.google.android.material.R.color.material_blue_grey_800));
-        } else {
-            holder.getBinding().getRoot().setBackgroundColor(context.getResources().getColor(com.google.android.material.R.color.m3_ref_palette_white));
-        }
+
+        showSelection(holder, picture);
 
         Glide
             .with(context)
