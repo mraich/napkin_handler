@@ -1,6 +1,12 @@
 <resources>
     <string name="app_name">NapkinHandler</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
+    <string name="title_home">Picture</string>
+    <string name="title_dashboard">Gallery</string>
     <string name="title_notifications">Notifications</string>
+    <string name="home_classified_as">Classified as: </string>
+    <string name="home_content_description_picture">Picture</string>
+    <string name="home_object_class">Object class</string>
+    <string name="home_take_picture">Take Picture</string>
+    <string name="home_launch_gallery">Launch Gallery</string>
+    <string name="picture_gallery_content_description_picture">Picture</string>
 </resources>
