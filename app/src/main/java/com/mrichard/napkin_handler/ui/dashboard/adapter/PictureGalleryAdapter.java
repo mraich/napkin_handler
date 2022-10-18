@@ -55,8 +55,6 @@ public class PictureGalleryAdapter extends RecyclerView.Adapter<PictureGalleryVi
 
     public void setSelectedPictures(Set<Long> selectedPictures) {
         this.selectedPictures = selectedPictures;
-
-        notifyDataSetChanged();
     }
 
     @Override
