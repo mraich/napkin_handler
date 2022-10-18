@@ -73,7 +73,11 @@ public class PictureGalleryAdapter extends RecyclerView.Adapter<PictureGalleryVi
         holder.getBinding().imageViewClassified.setText("" + picture.getAttributes());
 
         // Clicking the picture.
-        holder.getBinding().imageViewPicture.setOnClickListener(view -> dashboardViewModel.onClickPicture(picture.getId()));
+        holder.getBinding().imageViewPicture.setOnClickListener(view -> {
+            dashboardViewModel.onClickPicture(picture.getId());
+
+            showSelection(holder, picture);
+        });
     }
 
     @Override
