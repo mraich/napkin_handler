@@ -64,15 +64,12 @@ public class DashboardFragment extends Fragment {
 
     private void onPicturesChanged(List<Picture> pictures) {
         pictureGalleryAdapter.setPictures(pictures);
-
-        pictureGalleryAdapter.notifyDataSetChanged();
     }
 
     private void onSelectedPicturesChanged(Set<Long> selectedPictures) {
         this.selectedPictures = selectedPictures;
 
         pictureGalleryAdapter.setSelectedPictures(selectedPictures);
-        pictureGalleryAdapter.notifyDataSetChanged();
     }
 
     /**
