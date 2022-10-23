@@ -40,17 +40,17 @@ public class ImageRecognizer
     // in the future with a different neural net too.
 
     // Information on neural net from assets.
-    protected String NEURAL_NET_TFLITE = "image_recognizer/image_recognizer.tflite";
+    protected String NEURAL_NET_TFLITE = "image_recognizer/napkin.tflite";
     // Information on neural net output from assets.
     // It has to have the same line count as the NEURAL_NET_TFILE file output.
-    protected String NEURAL_NET_TFLITE_LABELS = "image_recognizer/image_recognizer_labels.txt";
+    protected String NEURAL_NET_TFLITE_LABELS = "image_recognizer/napkin_labels.txt";
 
     // Information on input determined by NEURAL_NET_TFLITE file.
     protected int INPUT_IMAGE_WIDTH = 224;
     protected int INPUT_IMAGE_HEIGHT = 224;
 
     // Information on output determined by NEURAL_NET_TFLITE file.
-    protected int OUTPUT_COUNT = 1000;
+    protected int OUTPUT_COUNT = 4;
     protected DataType OUTPUT_DATA_TYPE = DataType.FLOAT32;
 
     public ImageRecognizer(Context context) {
