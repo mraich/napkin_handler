@@ -50,7 +50,7 @@ public class ImageRecognizer
     protected int INPUT_IMAGE_HEIGHT = 224;
 
     // Information on output determined by NEURAL_NET_TFLITE file.
-    protected int OUTPUT_COUNT = 4;
+    protected int OUTPUT_COUNT = 6;
     protected DataType OUTPUT_DATA_TYPE = DataType.FLOAT32;
 
     public ImageRecognizer(Context context) {
