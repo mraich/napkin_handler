@@ -23,6 +23,7 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.mrichard.napkin_handler.data.db.GsonHandler;
 import com.mrichard.napkin_handler.data.db.NapkinDB;
 import com.mrichard.napkin_handler.data.image.ImageUtils;
 import com.mrichard.napkin_handler.data.image_recognition.ImageRecognizer;
@@ -172,13 +173,12 @@ public class HomeFragment extends Fragment {
                 });
 
                 // Doing the actual computation of the image processing.
-                Integer[] classifiedName = imageRecognizer.recognize(imageBitmap);
+                Integer[] attributes = imageRecognizer.recognize(imageBitmap);
 
                 // We have to do it on the UI thread again.
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        homeViewModel.getClassifiedText().setValue(classifiedName.toString());
                     }
                 });
 
@@ -186,7 +186,7 @@ public class HomeFragment extends Fragment {
                 // It needs to run on a separate thread unless we get this nice error below. :)
                 // java.lang.IllegalStateException: Cannot access database on the main thread since it may potentially lock the UI for a long period of time.
                 napkinDB.pictureDao().insert(
-                    new Picture(homeViewModel.getShowedPictureFile().getAbsolutePath(), classifiedName.toString())
+                    new Picture(homeViewModel.getShowedPictureFile().getAbsolutePath(), attributes)
                 );
             }
 
