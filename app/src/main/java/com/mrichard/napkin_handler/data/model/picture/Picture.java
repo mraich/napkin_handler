@@ -85,4 +85,8 @@ public class Picture
         return attributes;
     }
 
+    public String getAttributesJson() {
+        return attributesJson;
+    }
+
 }
