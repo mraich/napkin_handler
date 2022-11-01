@@ -4,7 +4,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
+
+import com.google.gson.Gson;
+import com.mrichard.napkin_handler.data.db.GsonHandler;
 
 @Entity(tableName = Picture.PICTURE_TABLE)
 public class Picture
@@ -25,7 +29,10 @@ public class Picture
 
     @ColumnInfo(name = COLUMN_ATTRIBUTES)
     @NonNull
-    protected String attributes;
+    protected String attributesJson;
+
+    @Ignore
+    protected Integer[] attributes = null;
 
     @ColumnInfo(name = COLUMN_TIMESTAMP)
     @NonNull
@@ -37,19 +44,20 @@ public class Picture
 
     public Picture(
         String path
-        , String attributes
+        , Integer[] attributes
     ) {
         this(path, attributes, null);
     }
 
     public Picture(
         String path
-        , String attributes
+        , Integer[] attributes
         , Long timestamp
         )
     {
         this.path = path;
         this.attributes = attributes;
+        this.attributesJson = GsonHandler.GetInstance().GetGson().toJson(this.attributes);
 
         if (timestamp == null)
         {
@@ -68,7 +76,12 @@ public class Picture
         return path;
     }
 
-    public String getAttributes() {
+    public Integer[] getAttributes()
+    {
+        if (attributes == null) {
+            attributes = GsonHandler.GetInstance().GetGson().fromJson(attributesJson, Integer[].class);
+        }
+
         return attributes;
     }
 
