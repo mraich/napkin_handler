@@ -172,13 +172,13 @@ public class HomeFragment extends Fragment {
                 });
 
                 // Doing the actual computation of the image processing.
-                String classifiedName = imageRecognizer.recognize(imageBitmap);
+                Integer[] classifiedName = imageRecognizer.recognize(imageBitmap);
 
                 // We have to do it on the UI thread again.
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        homeViewModel.getClassifiedText().setValue(classifiedName);
+                        homeViewModel.getClassifiedText().setValue(classifiedName.toString());
                     }
                 });
 
@@ -186,7 +186,7 @@ public class HomeFragment extends Fragment {
                 // It needs to run on a separate thread unless we get this nice error below. :)
                 // java.lang.IllegalStateException: Cannot access database on the main thread since it may potentially lock the UI for a long period of time.
                 napkinDB.pictureDao().insert(
-                    new Picture(homeViewModel.getShowedPictureFile().getAbsolutePath(), classifiedName)
+                    new Picture(homeViewModel.getShowedPictureFile().getAbsolutePath(), classifiedName.toString())
                 );
             }
 

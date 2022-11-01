@@ -43,14 +43,14 @@ public class ImageRecognizer
     protected String NEURAL_NET_TFLITE = "image_recognizer/napkin.tflite";
     // Information on neural net output from assets.
     // It has to have the same line count as the NEURAL_NET_TFILE file output.
-    protected String NEURAL_NET_TFLITE_LABELS = "image_recognizer/napkin_labels.txt";
+    // protected String NEURAL_NET_TFLITE_LABELS = "image_recognizer/napkin_labels.txt";
 
     // Information on input determined by NEURAL_NET_TFLITE file.
     protected int INPUT_IMAGE_WIDTH = 224;
     protected int INPUT_IMAGE_HEIGHT = 224;
 
     // Information on output determined by NEURAL_NET_TFLITE file.
-    protected int OUTPUT_COUNT = 6;
+    protected int OUTPUT_COUNT = 32;
     protected DataType OUTPUT_DATA_TYPE = DataType.FLOAT32;
 
     public ImageRecognizer(Context context) {
@@ -75,7 +75,7 @@ public class ImageRecognizer
 
     }
 
-    public String recognize(Bitmap image) {
+    public Integer[] recognize(Bitmap image) {
         try {
             DataType imageDataType = interpreter.getInputTensor(0).dataType();
             TensorImage tensorImage = new TensorImage(imageDataType);
@@ -95,20 +95,17 @@ public class ImageRecognizer
                     // Create a map to access the result based on label.
                     Map<String, Float> floatMap = tensorLabels.getMapWithFloatValue();
 
-                    Map.Entry<String, Float> maxEntry = null;
-                    for (Map.Entry<String, Float> entry : floatMap.entrySet())
-                    {
-                        if (maxEntry == null || entry.getValue().compareTo(maxEntry.getValue()) > 0)
-                        {
-                            maxEntry = entry;
-                        }
-                    }
-                    return maxEntry.getKey();
+                    List<Float> values = new ArrayList<Float>(floatMap.values());
+                    Integer[] result = new Integer[values.size()];
+                    for (int i = 0; i < values.size(); i++)
+                        result[i] = Math.round(values.get(i) * 10000);
+
+                    return result;
                 }
             }
         } catch (Exception e) {
         }
-        return "-";
+        return new Integer[0];
     }
 
     private MappedByteBuffer loadModelFile()
@@ -129,25 +126,11 @@ public class ImageRecognizer
 
     private ArrayList<String> readLabels() {
         ArrayList<String> result  = new ArrayList<>();
-        BufferedReader reader = null;
-        try {
-            reader = new BufferedReader(
-                    new InputStreamReader(context.getAssets().open(NEURAL_NET_TFLITE_LABELS)));
 
-            String line;
-            while ((line = reader.readLine()) != null) {
-                result.add(line);
-            }
-        } catch (IOException e) {
-            //log the exception
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                }
-            }
+        for (int i = 0; i < OUTPUT_COUNT; i++) {
+            result.add("" + i);
         }
+
         return result;
     }
 
