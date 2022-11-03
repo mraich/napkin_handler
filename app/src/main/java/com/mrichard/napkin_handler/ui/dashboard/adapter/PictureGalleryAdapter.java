@@ -70,7 +70,7 @@ public class PictureGalleryAdapter extends RecyclerView.Adapter<PictureGalleryVi
             .placeholder(R.drawable.ic_launcher_background)
             .into(holder.getBinding().imageViewPicture);
 
-        holder.getBinding().imageViewClassified.setText("" + picture.getAttributes());
+        holder.getBinding().imageViewClassified.setText("" + picture.getAttributesJson());
 
         // Clicking the picture.
         holder.getBinding().imageViewPicture.setOnClickListener(view -> {
