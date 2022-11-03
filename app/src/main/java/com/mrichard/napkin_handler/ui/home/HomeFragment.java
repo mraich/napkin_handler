@@ -179,6 +179,7 @@ public class HomeFragment extends Fragment {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        homeViewModel.getClassifiedText().setValue(GsonHandler.GetInstance().GetGson().toJson(attributes));
                     }
                 });
 
