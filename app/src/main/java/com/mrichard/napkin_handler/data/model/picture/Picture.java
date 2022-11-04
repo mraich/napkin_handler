@@ -37,6 +37,9 @@ public class Picture
     @NonNull
     protected long timestamp;
 
+    @Ignore
+    protected double similarity = 0;
+
     // We need this constructor for Room.
     protected Picture()  {
     }
@@ -86,6 +89,23 @@ public class Picture
 
     public String getAttributesJson() {
         return attributesJson;
+    }
+
+    public void setSimilarityForPicture(Picture other) {
+        Integer[] myAttributes = getAttributes();
+        Integer[] otherAttributes = other.getAttributes();
+        similarity = 0;
+
+        // Assuming the two picture has the same amount of features stored.
+        for (int i = 0; i < myAttributes.length; i++) {
+            int diff = myAttributes[i] - otherAttributes[i];
+            similarity += (diff * diff);
+        }
+        similarity = Math.sqrt(similarity);
+    }
+
+    public double getSimilarity() {
+        return similarity;
     }
 
 }
