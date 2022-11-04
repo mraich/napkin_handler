@@ -32,12 +32,15 @@ public class DashboardFragment extends Fragment {
 
     private Set<Long> selectedPictures;
 
+    protected NapkinDB napkinDB = null;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         DashboardViewModel dashboardViewModel =
                 new ViewModelProvider(this).get(DashboardViewModel.class);
 
-        dashboardViewModel.setNapkinDB(NapkinDB.GetInstance(getContext()));
+        napkinDB = NapkinDB.GetInstance(getContext());
+        dashboardViewModel.setNapkinDB(napkinDB);
 
         binding = FragmentDashboardBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
