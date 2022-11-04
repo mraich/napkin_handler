@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -70,6 +71,8 @@ public class DashboardFragment extends Fragment {
         this.selectedPictures = selectedPictures;
 
         pictureGalleryAdapter.setSelectedPictures(selectedPictures);
+
+        binding.buttonSimilarPictures.setEnabled(selectedPictures.size() == 1);
     }
 
     /**
