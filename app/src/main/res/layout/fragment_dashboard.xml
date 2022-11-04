@@ -15,10 +15,24 @@
         android:layout_marginEnd="8dp"
         android:textAlignment="center"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/button_share_pictures"
+        app:layout_constraintBottom_toTopOf="@+id/button_similar_pictures"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/button_similar_pictures"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:text="Similar pictures"
+        android:textAllCaps="false"
+        android:textSize="21sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/button_share_pictures"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/button_share_pictures"
