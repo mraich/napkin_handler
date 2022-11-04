@@ -10,7 +10,7 @@ import androidx.room.PrimaryKey;
 import com.mrichard.napkin_handler.data.db.GsonHandler;
 
 @Entity(tableName = Picture.PICTURE_TABLE)
-public class Picture
+public class Picture implements Comparable<Picture>
 {
 
     public static final String PICTURE_TABLE = "picture";
@@ -106,6 +106,18 @@ public class Picture
 
     public double getSimilarity() {
         return similarity;
+    }
+
+    @Override
+    public int compareTo(Picture other) {
+        if (getSimilarity() > other.getSimilarity()) {
+            return 1;
+        }
+        if (getSimilarity() < other.getSimilarity()) {
+            return -1;
+        }
+
+        return 0;
     }
 
 }
