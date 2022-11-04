@@ -21,6 +21,7 @@ import com.mrichard.napkin_handler.ui.dashboard.adapter.PictureGalleryAdapter;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -30,6 +31,8 @@ public class DashboardFragment extends Fragment {
 
     private PictureGalleryAdapter pictureGalleryAdapter;
 
+    private boolean sorted = false;
+    private List<Picture> pictures;
     private Set<Long> selectedPictures;
 
     protected NapkinDB napkinDB = null;
@@ -53,6 +56,12 @@ public class DashboardFragment extends Fragment {
             sharePictures(selectedPictures);
         });
 
+        binding.buttonSimilarPictures.setOnClickListener(view -> {
+            sorted = true;
+
+            showPictures();
+        });
+
         dashboardViewModel.getPictures().observe(getViewLifecycleOwner(), this::onPicturesChanged);
 
         dashboardViewModel.selectedPictures().observe(getViewLifecycleOwner(), this::onSelectedPicturesChanged);
@@ -67,7 +76,27 @@ public class DashboardFragment extends Fragment {
     }
 
     private void onPicturesChanged(List<Picture> pictures) {
-        pictureGalleryAdapter.setPictures(pictures);
+        this.pictures = pictures;
+
+        showPictures();
+    }
+
+    private void showPictures() {
+        Thread thread = new Thread(() -> {
+            if (sorted) {
+                if (!selectedPictures.isEmpty()) {
+                    Picture selectedPicture = napkinDB.pictureDao().getPicture(selectedPictures.iterator().next());
+                    if (selectedPicture != null) {
+                        for (Picture picture : pictures) {
+                            picture.setSimilarityForPicture(selectedPicture);
+                        }
+                    }
+                    Collections.sort(pictures);
+                }
+            }
+            getActivity().runOnUiThread(() -> pictureGalleryAdapter.setPictures(pictures));
+        });
+        thread.start();
     }
 
     private void onSelectedPicturesChanged(Set<Long> selectedPictures) {
@@ -76,6 +105,9 @@ public class DashboardFragment extends Fragment {
         pictureGalleryAdapter.setSelectedPictures(selectedPictures);
 
         binding.buttonSimilarPictures.setEnabled(selectedPictures.size() == 1);
+        if (!binding.buttonSimilarPictures.isEnabled()) {
+            sorted = false;
+        }
     }
 
     /**
