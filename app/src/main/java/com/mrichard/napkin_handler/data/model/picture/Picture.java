@@ -7,7 +7,6 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
-import com.google.gson.Gson;
 import com.mrichard.napkin_handler.data.db.GsonHandler;
 
 @Entity(tableName = Picture.PICTURE_TABLE)
