@@ -109,6 +109,8 @@ public class DashboardFragment extends Fragment {
 
         pictureGalleryAdapter.setSelectedPictures(selectedPictures);
 
+        binding.buttonSharePictures.setEnabled(selectedPictures.size() != 0);
+
         binding.buttonSimilarPictures.setEnabled(selectedPictures.size() == 1);
         if (!binding.buttonSimilarPictures.isEnabled()) {
             sorted = false;
