@@ -9,6 +9,6 @@
     <string name="home_take_picture">Take Picture</string>
     <string name="home_launch_gallery">Launch Gallery</string>
     <string name="picture_gallery_content_description_picture">Picture</string>
-    <string name="dashboard_similar_pictures">Similar pictures</string>
-    <string name="dashboard_share_pictures">Share pictures</string>
+    <string name="dashboard_similar_pictures">Similar</string>
+    <string name="dashboard_share_pictures">Share</string>
 </resources>
