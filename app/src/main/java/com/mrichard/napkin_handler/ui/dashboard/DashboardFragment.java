@@ -31,6 +31,8 @@ public class DashboardFragment extends Fragment {
 
     private PictureGalleryAdapter pictureGalleryAdapter;
 
+    private DashboardViewModel dashboardViewModel;
+
     private boolean sorted = false;
     private List<Picture> pictures;
     private Set<Long> selectedPictures;
@@ -39,7 +41,7 @@ public class DashboardFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        DashboardViewModel dashboardViewModel =
+        dashboardViewModel =
                 new ViewModelProvider(this).get(DashboardViewModel.class);
 
         napkinDB = NapkinDB.GetInstance(getContext());
