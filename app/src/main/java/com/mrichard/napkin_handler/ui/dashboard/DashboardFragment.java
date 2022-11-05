@@ -94,6 +94,9 @@ public class DashboardFragment extends Fragment {
                         }
                     }
                     Collections.sort(pictures);
+
+                    // The picture is no longer selected.
+                    getActivity().runOnUiThread(() -> dashboardViewModel.onClickPicture(selectedPicture.getId()));
                 }
             }
             getActivity().runOnUiThread(() -> pictureGalleryAdapter.setPictures(pictures));
