@@ -15,7 +15,7 @@ import com.mrichard.napkin_handler.data.model.picture.Picture;
     entities = {
         Picture.class
     }
-    , version = 2
+    , version = 3
     , exportSchema = false
 )
 public abstract class
@@ -53,6 +53,7 @@ public abstract class
                     , DB_NAME
                     )
                     .addMigrations(MIGRATION_1_2)
+                    .addMigrations(MIGRATION_2_3)
                     .build();
         }
         return
@@ -73,6 +74,21 @@ public abstract class
             database.execSQL("PRAGMA foreign_keys = 0;");
 
             database.execSQL("CREATE TABLE picture (id INTEGER PRIMARY KEY AUTOINCREMENT, path TEXT NOT NULL, attributes TEXT NOT NULL, timestamp INTEGER NOT NULL DEFAULT (strftime('%s', 'now')));");
+
+            database.execSQL("PRAGMA foreign_keys = 1;");
+        }
+
+    };
+
+    public static final Migration MIGRATION_2_3 = new Migration(2, 3)
+    {
+
+        @Override
+        public void migrate(SupportSQLiteDatabase database)
+        {
+            database.execSQL("PRAGMA foreign_keys = 0;");
+
+            database.execSQL("ALTER TABLE picture ADD count INTEGER NOT NULL DEFAULT 1;");
 
             database.execSQL("PRAGMA foreign_keys = 1;");
         }
