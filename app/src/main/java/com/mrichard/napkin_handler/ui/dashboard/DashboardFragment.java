@@ -36,7 +36,7 @@ public class DashboardFragment extends Fragment {
 
     private boolean toSwap = false;
     private boolean sorted = false;
-    private List<Picture> pictures;
+    private List<Picture> pictures = new ArrayList<>();
     private List<Picture> showPictures;
     private Set<Long> selectedPictures;
 
