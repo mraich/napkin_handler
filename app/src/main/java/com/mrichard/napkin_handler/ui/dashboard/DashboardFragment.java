@@ -70,6 +70,13 @@ public class DashboardFragment extends Fragment {
         binding.buttonSimilarPictures.setOnClickListener(view -> {
             sorted = true;
 
+            // When sort the items by their similarity then we have to show the most
+            // similar picture.
+            // The most similar picture is the selected picture itself but if we show that
+            // picture then we can see the next one which is the second most similar
+            // to it.
+            binding.pictureGallery.scrollToPosition(0);
+
             showPictures();
         });
 
