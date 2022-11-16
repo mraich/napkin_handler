@@ -1,13 +1,16 @@
 package com.mrichard.napkin_handler.ui.dashboard.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.mrichard.napkin_handler.R;
+import com.mrichard.napkin_handler.data.db.NapkinDB;
 import com.mrichard.napkin_handler.data.model.picture.Picture;
 import com.mrichard.napkin_handler.databinding.PictureGalleryItemBinding;
 import com.mrichard.napkin_handler.ui.dashboard.DashboardViewModel;
@@ -20,14 +23,18 @@ public class PictureGalleryAdapter extends RecyclerView.Adapter<PictureGalleryVi
 
     private Context context;
 
+    private Activity activity;
+
     private DashboardViewModel dashboardViewModel;
 
     private List<Picture> pictures;
 
     private Set<Long> selectedPictures;
 
-    public PictureGalleryAdapter(Context context, DashboardViewModel dashboardViewModel) {
+    public PictureGalleryAdapter(Context context, Activity activity, DashboardViewModel dashboardViewModel) {
         this.context = context;
+
+        this.activity = activity;
 
         this.dashboardViewModel = dashboardViewModel;
 
@@ -70,6 +77,7 @@ public class PictureGalleryAdapter extends RecyclerView.Adapter<PictureGalleryVi
             .placeholder(R.drawable.ic_launcher_background)
             .into(holder.getBinding().imageViewPicture);
 
+        holder.getBinding().imageCountTextView.setText("" + picture.getCount());
         holder.getBinding().imageViewClassified.setText("" + picture.getSimilarity() + ", " + picture.getAttributesJson());
 
         // Clicking the picture.
@@ -77,6 +85,30 @@ public class PictureGalleryAdapter extends RecyclerView.Adapter<PictureGalleryVi
             dashboardViewModel.onClickPicture(picture.getId());
 
             showSelection(holder, picture);
+        });
+        // Clicking the plus.
+        holder.getBinding().imagePlusButton.setOnClickListener(view -> {
+            picture.setCount(picture.getCount() + 1);
+
+            // Saving.
+            Thread thread = new Thread(() -> {
+                NapkinDB.GetInstance(view.getContext()).pictureDao().update(picture);
+
+                activity.runOnUiThread(() -> notifyItemChanged(position));
+            });
+            thread.start();
+        });
+        // Clicking the minus.
+        holder.getBinding().imageMinusButton.setOnClickListener(view -> {
+            picture.setCount(picture.getCount() - 1);
+
+            // Saving.
+            Thread thread = new Thread(() -> {
+                NapkinDB.GetInstance(view.getContext()).pictureDao().update(picture);
+
+                activity.runOnUiThread(() -> notifyItemChanged(position));
+            });
+            thread.start();
         });
     }
 
