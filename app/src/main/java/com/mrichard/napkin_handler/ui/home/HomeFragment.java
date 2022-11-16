@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -23,7 +22,6 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.mrichard.napkin_handler.data.db.GsonHandler;
 import com.mrichard.napkin_handler.data.db.NapkinDB;
 import com.mrichard.napkin_handler.data.image.ImageUtils;
 import com.mrichard.napkin_handler.data.image_recognition.ImageRecognizer;
@@ -44,6 +42,8 @@ public class HomeFragment extends Fragment {
     private ImageRecognizer imageRecognizer;
 
     private ImageUtils imageUtils;
+
+    private File imageFile;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -73,7 +73,7 @@ public class HomeFragment extends Fragment {
                     Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
                     // We will save the picture in this UUID file.
-                    File imageFile = imageUtils.createImageFile(getContext());
+                    imageFile = imageUtils.createImageFile(getContext());
                     Uri photoURI = FileProvider.getUriForFile(this.getContext(),
                             "com.mrichard.napkin_handler.fileprovider",
                             imageFile);
@@ -95,6 +95,9 @@ public class HomeFragment extends Fragment {
                 ActivityCompat.requestPermissions(getActivity(), new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE }, 110);
             } else {
                 Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+                // We can pick multiple pictures.
+                galleryIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
 
                 galleryActivityResultLauncher.launch(galleryIntent);
             }
@@ -123,10 +126,7 @@ public class HomeFragment extends Fragment {
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
-                    String filePath = homeViewModel.getShowedPictureFile().getAbsolutePath();
-                    Bitmap imageBitmap = BitmapFactory.decodeFile(filePath);
-
-                    processImageBitmap(imageBitmap);
+                    processImageBitmap(imageFile);
                 }
             });
 
@@ -139,15 +139,20 @@ public class HomeFragment extends Fragment {
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
-                    homeViewModel.setShowedPictureFile(new File(imageUtils.saveFile(getContext(), result.getData().getData())));
-                    Bitmap imageBitmap = BitmapFactory.decodeFile(homeViewModel.getShowedPictureFile().getAbsolutePath());
+                        if (result.getData().getClipData() != null) {
+                            int pictureCount = result.getData().getClipData().getItemCount();
+                            for (int i = 0; i < pictureCount; i++) {
+                                Uri imageUri = result.getData().getClipData().getItemAt(i).getUri();
+                                File imageFile = new File(imageUtils.saveFile(getContext(), imageUri));
 
-                    processImageBitmap(imageBitmap);
+                                processImageBitmap(imageFile);
+                            }
+                        }
                 }
             });
 
     // Processing image bitmap.
-    private void processImageBitmap(Bitmap imageBitmap) {
+    private void processImageBitmap(File imageFile) {
         // We do the computation in a new thread.
         Thread processorThread = new Thread() {
 
@@ -155,40 +160,22 @@ public class HomeFragment extends Fragment {
             public void run() {
                 super.run();
 
-                // Creating the thumbnail image.
-                int dimension = Math.min(imageBitmap.getWidth(), imageBitmap.getHeight());
-                Bitmap thumbnailImage = ThumbnailUtils.extractThumbnail(imageBitmap, dimension, dimension);
-
-                // We are on a separate thread and we have to do any changes
-                // on the GUI on the UI thread.
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        // Show image through the homeViewModel.
-                        homeViewModel.getThumbnailBitmap().setValue(thumbnailImage);
-
-                        // We don't know the classified name for now.
-                        homeViewModel.getClassifiedText().setValue("");
-                    }
-                });
+                // Decoding image bitmap.
+                String filePath = imageFile.getAbsolutePath();
+                Bitmap imageBitmap = BitmapFactory.decodeFile(filePath);
 
                 // Doing the actual computation of the image processing.
                 Integer[] attributes = imageRecognizer.recognize(imageBitmap);
 
-                // We have to do it on the UI thread again.
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        homeViewModel.getClassifiedText().setValue(GsonHandler.GetInstance().GetGson().toJson(attributes));
-                    }
-                });
-
                 // Saving the picture and its classification.
                 // It needs to run on a separate thread unless we get this nice error below. :)
                 // java.lang.IllegalStateException: Cannot access database on the main thread since it may potentially lock the UI for a long period of time.
-                napkinDB.pictureDao().insert(
-                    new Picture(homeViewModel.getShowedPictureFile().getAbsolutePath(), attributes)
-                );
+                // It is synchronized as database operations are not threadsafe.
+                synchronized (napkinDB) {
+                    napkinDB.pictureDao().insert(
+                            new Picture(imageFile.getAbsolutePath(), attributes)
+                    );
+                }
             }
 
         };
