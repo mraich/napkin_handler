@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.FileProvider;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class DashboardFragment extends Fragment {
 
@@ -32,8 +34,10 @@ public class DashboardFragment extends Fragment {
 
     private DashboardViewModel dashboardViewModel;
 
+    private boolean toSwap = false;
     private boolean sorted = false;
     private List<Picture> pictures;
+    private List<Picture> showPictures;
     private Set<Long> selectedPictures;
 
     protected NapkinDB napkinDB = null;
@@ -52,6 +56,12 @@ public class DashboardFragment extends Fragment {
         pictureGalleryAdapter = new PictureGalleryAdapter(getContext(), getActivity(), dashboardViewModel);
         binding.pictureGallery.setLayoutManager(new GridLayoutManager(getActivity().getApplicationContext(), 2));
         binding.pictureGallery.setAdapter(pictureGalleryAdapter);
+
+        binding.switchToSwap.setOnCheckedChangeListener((compoundButton, b) -> {
+            toSwap = b;
+
+            showPictures();
+        });
 
         binding.buttonSharePictures.setOnClickListener(view -> {
             sharePictures(selectedPictures);
@@ -98,7 +108,12 @@ public class DashboardFragment extends Fragment {
                     getActivity().runOnUiThread(() -> dashboardViewModel.onClickPicture(selectedPicture.getId()));
                 }
             }
-            getActivity().runOnUiThread(() -> pictureGalleryAdapter.setPictures(pictures));
+
+            showPictures = pictures.stream()
+                    .filter(picture -> !toSwap || picture.getCount() >= 1)
+                    .collect(Collectors.toList());
+
+            getActivity().runOnUiThread(() -> pictureGalleryAdapter.setPictures(showPictures));
         });
         thread.start();
     }

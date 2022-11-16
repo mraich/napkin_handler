@@ -9,6 +9,7 @@
     <string name="home_take_picture">Fényképez</string>
     <string name="home_launch_gallery">Galériából</string>
     <string name="picture_gallery_content_description_picture">Kép</string>
+    <string name="dashboard_to_swap">Cserék</string>
     <string name="dashboard_similar_pictures">Hasonló</string>
     <string name="dashboard_share_pictures">Megosztás</string>
 </resources>
