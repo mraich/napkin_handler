@@ -13,6 +13,7 @@ import com.mrichard.napkin_handler.R;
 import com.mrichard.napkin_handler.data.db.NapkinDB;
 import com.mrichard.napkin_handler.data.model.picture.Picture;
 import com.mrichard.napkin_handler.databinding.PictureGalleryItemBinding;
+import com.mrichard.napkin_handler.ui.FontManager;
 import com.mrichard.napkin_handler.ui.dashboard.DashboardViewModel;
 
 import java.util.ArrayList;
@@ -45,6 +46,8 @@ public class PictureGalleryAdapter extends RecyclerView.Adapter<PictureGalleryVi
     public PictureGalleryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         try {
             PictureGalleryItemBinding binding = PictureGalleryItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+
+            FontManager.MarkAsIconContainer(binding.getRoot(), FontManager.FONT_AWESOME);
 
             return new PictureGalleryViewHolder(binding);
         } catch (Exception e) {
