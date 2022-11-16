@@ -75,7 +75,7 @@ public class ImageRecognizer
 
     }
 
-    public Integer[] recognize(Bitmap image) {
+    public synchronized Integer[] recognize(Bitmap image) {
         try {
             DataType imageDataType = interpreter.getInputTensor(0).dataType();
             TensorImage tensorImage = new TensorImage(imageDataType);
