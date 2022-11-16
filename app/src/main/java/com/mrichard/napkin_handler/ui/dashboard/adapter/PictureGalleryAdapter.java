@@ -105,6 +105,13 @@ public class PictureGalleryAdapter extends RecyclerView.Adapter<PictureGalleryVi
         holder.getBinding().imageMinusButton.setOnClickListener(view -> {
             picture.setCount(picture.getCount() - 1);
 
+            // We cannot have negative amount of napkins.
+            if (picture.getCount() < 0) {
+                picture.setCount(0);
+
+                return;
+            }
+
             // Saving.
             Thread thread = new Thread(() -> {
                 NapkinDB.GetInstance(view.getContext()).pictureDao().update(picture);
