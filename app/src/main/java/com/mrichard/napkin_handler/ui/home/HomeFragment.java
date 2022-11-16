@@ -172,6 +172,15 @@ public class HomeFragment extends Fragment {
                 // java.lang.IllegalStateException: Cannot access database on the main thread since it may potentially lock the UI for a long period of time.
                 // It is synchronized as database operations are not threadsafe.
                 Picture picture = new Picture(imageFile.getAbsolutePath(), attributes);
+
+                // By default we have 1 picture.
+                // The logic behind this is that if we took a picture by camera of a napkin
+                // then we have at least one of it.
+                // Of course this does not apply for the gallery import, but don't see any reason
+                // we not to suppose that we have at least one napkin from each of the
+                // picked pictures.
+                picture.setCount(1);
+
                 synchronized (napkinDB) {
                     napkinDB.pictureDao().insert(
                             picture
