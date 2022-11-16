@@ -171,9 +171,10 @@ public class HomeFragment extends Fragment {
                 // It needs to run on a separate thread unless we get this nice error below. :)
                 // java.lang.IllegalStateException: Cannot access database on the main thread since it may potentially lock the UI for a long period of time.
                 // It is synchronized as database operations are not threadsafe.
+                Picture picture = new Picture(imageFile.getAbsolutePath(), attributes);
                 synchronized (napkinDB) {
                     napkinDB.pictureDao().insert(
-                            new Picture(imageFile.getAbsolutePath(), attributes)
+                            picture
                     );
                 }
             }
