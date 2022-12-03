@@ -103,10 +103,10 @@ public class Picture implements Comparable<Picture>
 
         // Assuming the two picture has the same amount of features stored.
         for (int i = 0; i < myAttributes.length; i++) {
-            int diff = myAttributes[i] - otherAttributes[i];
-            similarity += (diff * diff);
+            int diff = Math.abs(myAttributes[i] - otherAttributes[i]);
+            similarity += diff;
         }
-        similarity = Math.sqrt(similarity);
+        similarity /= myAttributes.length;
     }
 
     public double getSimilarity() {
