@@ -117,7 +117,7 @@ public class DashboardFragment extends Fragment {
             }
 
             showPictures = pictures.stream()
-                    .filter(picture -> !toSwap || picture.getCount() >= 1)
+                    .filter(picture -> !toSwap || picture.getCount() >= 2)
                     .collect(Collectors.toList());
 
             getActivity().runOnUiThread(() -> pictureGalleryAdapter.setPictures(showPictures));
