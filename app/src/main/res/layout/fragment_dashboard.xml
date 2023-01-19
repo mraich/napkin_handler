@@ -30,6 +30,20 @@
         android:textAllCaps="false"
         android:textSize="21sp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/button_search_by_camera"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/button_search_by_camera"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:text="@string/dashboard_search_by_camera"
+        android:textAllCaps="false"
+        android:textSize="21sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/button_share_pictures"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -55,5 +69,6 @@
         android:text="@string/dashboard_to_swap"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
