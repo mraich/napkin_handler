@@ -161,17 +161,8 @@ public class HomeFragment extends Fragment {
                 super.run();
 
                 // Decoding image bitmap.
-                String filePath = imageFile.getAbsolutePath();
-                Bitmap imageBitmap = BitmapFactory.decodeFile(filePath);
-
-                // Doing the actual computation of the image processing.
-                Integer[] attributes = imageRecognizer.recognize(imageBitmap);
-
-                // Saving the picture and its classification.
-                // It needs to run on a separate thread unless we get this nice error below. :)
-                // java.lang.IllegalStateException: Cannot access database on the main thread since it may potentially lock the UI for a long period of time.
                 // It is synchronized as database operations are not threadsafe.
-                Picture picture = new Picture(imageFile.getAbsolutePath(), attributes);
+                Picture picture = Picture.FromFile(imageFile, imageRecognizer);
 
                 // By default we have 1 picture.
                 // The logic behind this is that if we took a picture by camera of a napkin
