@@ -1,24 +1,36 @@
 package com.mrichard.napkin_handler.ui.dashboard;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.mrichard.napkin_handler.data.db.NapkinDB;
+import com.mrichard.napkin_handler.data.image.ImageUtils;
+import com.mrichard.napkin_handler.data.image_recognition.ImageRecognizer;
 import com.mrichard.napkin_handler.data.model.picture.Picture;
 import com.mrichard.napkin_handler.databinding.FragmentDashboardBinding;
 import com.mrichard.napkin_handler.ui.dashboard.adapter.PictureGalleryAdapter;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -33,11 +45,18 @@ public class DashboardFragment extends Fragment {
 
     private DashboardViewModel dashboardViewModel;
 
+    private ImageUtils imageUtils;
+
     private boolean toSwap = false;
     private boolean sorted = false;
     private List<Picture> pictures = new ArrayList<>();
     private List<Picture> showPictures;
     private Set<Long> selectedPictures;
+
+    private ImageRecognizer imageRecognizer;
+
+    private File imageFile;
+    private Picture processedPicture;
 
     protected NapkinDB napkinDB = null;
 
@@ -47,7 +66,9 @@ public class DashboardFragment extends Fragment {
                 new ViewModelProvider(this).get(DashboardViewModel.class);
 
         napkinDB = NapkinDB.GetInstance(getContext());
+        imageRecognizer = new ImageRecognizer(getContext());
         dashboardViewModel.setNapkinDB(napkinDB);
+        imageUtils = new ImageUtils();
 
         binding = FragmentDashboardBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -64,6 +85,31 @@ public class DashboardFragment extends Fragment {
 
         binding.buttonSharePictures.setOnClickListener(view -> {
             sharePictures(selectedPictures);
+        });
+
+        binding.buttonSearchByCamera.setOnClickListener(view -> {
+            // Checking permission.
+            if (
+                    ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(getActivity(), new String[] { Manifest.permission.CAMERA }, 110);
+            } else {
+                try {
+                    // We have permission to use the camera.
+                    Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+                    // We will save the picture in this UUID file.
+                    imageFile = imageUtils.createImageFile(getContext());
+                    Uri photoURI = FileProvider.getUriForFile(this.getContext(),
+                            "com.mrichard.napkin_handler.fileprovider",
+                            imageFile);
+                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+
+                    cameraActivityResultLauncher.launch(cameraIntent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         });
 
         binding.buttonSimilarPictures.setOnClickListener(view -> {
@@ -92,8 +138,26 @@ public class DashboardFragment extends Fragment {
         binding = null;
     }
 
+    /**
+     * Starting camera activity to capture picture.
+     * Ugly AF.
+     */
+    ActivityResultLauncher<Intent> cameraActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    processImageBitmap(imageFile);
+                }
+            });
+
     private void onPicturesChanged(List<Picture> pictures) {
         this.pictures = pictures;
+
+        showPictures();
+    }
+
+    protected void processImageBitmap(File imageFile) {
+        processedPicture = Picture.FromFile(imageFile, imageRecognizer);
 
         showPictures();
     }
@@ -112,6 +176,19 @@ public class DashboardFragment extends Fragment {
 
                     // The picture is no longer selected.
                     getActivity().runOnUiThread(() -> dashboardViewModel.onClickPicture(selectedPicture.getId()));
+                }
+            }
+            {
+                if (processedPicture != null) {
+                    for (Picture picture : pictures) {
+                        picture.setSimilarityForPicture(processedPicture);
+                    }
+
+                    Collections.sort(pictures);
+
+                    // Deleting the file.
+                    processedPicture = null;
+                    imageFile.delete();
                 }
             }
 
