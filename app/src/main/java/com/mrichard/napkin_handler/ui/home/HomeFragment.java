@@ -51,9 +51,7 @@ public class HomeFragment extends Fragment {
 
         // Antipattern, but works.
         napkinDB = NapkinDB.GetInstance(getContext());
-
         imageRecognizer = new ImageRecognizer(getContext());
-
         imageUtils = new ImageUtils();
 
         // Inflating fragment.
