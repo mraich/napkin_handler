@@ -1,5 +1,8 @@
 package com.mrichard.napkin_handler.data.model.picture;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
@@ -8,6 +11,9 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.mrichard.napkin_handler.data.db.GsonHandler;
+import com.mrichard.napkin_handler.data.image_recognition.ImageRecognizer;
+
+import java.io.File;
 
 @Entity(tableName = Picture.PICTURE_TABLE)
 public class Picture implements Comparable<Picture>
@@ -73,6 +79,21 @@ public class Picture implements Comparable<Picture>
         {
             this.timestamp = timestamp.longValue() * 1000;
         }
+    }
+
+    public static Picture FromFile(File imageFile, ImageRecognizer imageRecognizer) {
+        // Decoding image bitmap.
+        String filePath = imageFile.getAbsolutePath();
+        Bitmap imageBitmap = BitmapFactory.decodeFile(filePath);
+
+        // Doing the actual computation of the image processing.
+        Integer[] attributes = imageRecognizer.recognize(imageBitmap);
+
+        // Saving the picture and its classification.
+        // It needs to run on a separate thread unless we get this nice error below. :)
+        // java.lang.IllegalStateException: Cannot access database on the main thread since it may potentially lock the UI for a long period of time.
+        // It is synchronized as database operations are not threadsafe.
+        return new Picture(imageFile.getAbsolutePath(), attributes);
     }
 
     public Long getId() {
