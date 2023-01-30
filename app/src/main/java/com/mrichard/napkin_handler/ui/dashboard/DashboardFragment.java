@@ -189,6 +189,9 @@ public class DashboardFragment extends Fragment {
                     // Deleting the file.
                     processedPicture = null;
                     imageFile.delete();
+
+                    // Showing the pictures from the first pictures.
+                    getActivity().runOnUiThread(() -> binding.pictureGallery.scrollToPosition(0));
                 }
             }
 
