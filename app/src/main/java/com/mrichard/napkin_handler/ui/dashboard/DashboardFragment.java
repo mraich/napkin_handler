@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -27,7 +26,7 @@ import com.mrichard.napkin_handler.data.image.ImageUtils;
 import com.mrichard.napkin_handler.data.image_recognition.ImageRecognizerStore;
 import com.mrichard.napkin_handler.data.model.picture.Picture;
 import com.mrichard.napkin_handler.databinding.FragmentDashboardBinding;
-import com.mrichard.napkin_handler.ui.dashboard.adapter.PictureGalleryAdapter;
+import com.mrichard.napkin_handler.ui.adapter.PictureGalleryAdapter;
 
 import java.io.File;
 import java.util.ArrayList;

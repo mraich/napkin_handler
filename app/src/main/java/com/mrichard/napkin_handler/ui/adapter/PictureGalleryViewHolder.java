@@ -1,4 +1,4 @@
-package com.mrichard.napkin_handler.ui.dashboard.adapter;
+package com.mrichard.napkin_handler.ui.adapter;
 
 import androidx.recyclerview.widget.RecyclerView;
 

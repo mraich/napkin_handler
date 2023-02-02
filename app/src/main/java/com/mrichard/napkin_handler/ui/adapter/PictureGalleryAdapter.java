@@ -1,9 +1,8 @@
-package com.mrichard.napkin_handler.ui.dashboard.adapter;
+package com.mrichard.napkin_handler.ui.adapter;
 
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.recyclerview.widget.RecyclerView;
