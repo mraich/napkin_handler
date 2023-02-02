@@ -96,12 +96,6 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        // Image showing.
-        homeViewModel.getThumbnailBitmap().observe(getViewLifecycleOwner(), binding.imageViewPicture::setImageBitmap);
-
-        // Image class name binding.
-        homeViewModel.getClassifiedText().observe(getViewLifecycleOwner(), binding.textviewClassified::setText);
-
         return root;
     }
 
