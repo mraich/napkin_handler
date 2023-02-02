@@ -24,6 +24,7 @@ public class Picture implements Comparable<Picture>
     public static final String COLUMN_ATTRIBUTES = "attributes";
     public static final String COLUMN_TIMESTAMP = "timestamp";
     public static final String COLUMN_COUNT = "count";
+    public static final String COLUMN_IS_NEW = "is_new";
 
     @PrimaryKey(autoGenerate = true)
     @Nullable
@@ -50,6 +51,10 @@ public class Picture implements Comparable<Picture>
     @ColumnInfo(name = COLUMN_COUNT)
     @NonNull
     protected int count;
+
+    @ColumnInfo(name = COLUMN_IS_NEW)
+    @NonNull
+    protected boolean isNew;
 
     // We need this constructor for Room.
     protected Picture()  {
@@ -153,5 +158,9 @@ public class Picture implements Comparable<Picture>
     public void setCount(int count) {
         this.count = count;
     }
+
+    public boolean isNew() { return isNew; }
+
+    public void setNew(boolean isNew) { this.isNew = isNew; }
 
 }
