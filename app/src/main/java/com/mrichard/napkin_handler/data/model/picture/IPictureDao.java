@@ -19,6 +19,9 @@ public interface IPictureDao
 		@Query("SELECT * FROM " + Picture.PICTURE_TABLE)
 		LiveData<List<Picture>> getAll();
 
+		@Query("SELECT * FROM " + Picture.PICTURE_TABLE + " WHERE is_new = 1")
+		LiveData<List<Picture>> newPictures();
+
 		@Insert
 		void insert(Picture picture);
 
