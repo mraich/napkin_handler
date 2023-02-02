@@ -24,7 +24,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.mrichard.napkin_handler.data.db.NapkinDB;
 import com.mrichard.napkin_handler.data.image.ImageUtils;
-import com.mrichard.napkin_handler.data.image_recognition.ImageRecognizer;
+import com.mrichard.napkin_handler.data.image_recognition.ImageRecognizerStore;
 import com.mrichard.napkin_handler.data.model.picture.Picture;
 import com.mrichard.napkin_handler.databinding.FragmentHomeBinding;
 
@@ -39,8 +39,6 @@ public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
 
-    private ImageRecognizer imageRecognizer;
-
     private ImageUtils imageUtils;
 
     private File imageFile;
@@ -51,7 +49,6 @@ public class HomeFragment extends Fragment {
 
         // Antipattern, but works.
         napkinDB = NapkinDB.GetInstance(getContext());
-        imageRecognizer = new ImageRecognizer(getContext());
         imageUtils = new ImageUtils();
 
         // Inflating fragment.
@@ -160,7 +157,7 @@ public class HomeFragment extends Fragment {
 
                 // Decoding image bitmap.
                 // It is synchronized as database operations are not threadsafe.
-                Picture picture = Picture.FromFile(imageFile, imageRecognizer);
+                Picture picture = Picture.FromFile(imageFile, ImageRecognizerStore.GetInstance(getContext()));
 
                 // By default we have 1 picture.
                 // The logic behind this is that if we took a picture by camera of a napkin
