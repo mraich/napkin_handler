@@ -13,11 +13,11 @@ import java.util.List;
 public interface IPictureDao
 {
 
-		@Query("SELECT * FROM " + Picture.PICTURE_TABLE)
-		LiveData<List<Picture>> getAll();
-
 		@Query("SELECT * FROM " + Picture.PICTURE_TABLE + " WHERE id = :id LIMIT 1")
 		Picture getPicture(long id);
+
+		@Query("SELECT * FROM " + Picture.PICTURE_TABLE)
+		LiveData<List<Picture>> getAll();
 
 		@Insert
 		void insert(Picture picture);
