@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class ImageRecognizer
+public class ImageRecognizer implements IImageRecognizer
 {
 
     private Context context;
