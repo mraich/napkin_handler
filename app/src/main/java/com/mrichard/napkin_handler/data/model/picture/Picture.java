@@ -11,7 +11,7 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.mrichard.napkin_handler.data.db.GsonHandler;
-import com.mrichard.napkin_handler.data.image_recognition.ImageRecognizer;
+import com.mrichard.napkin_handler.data.image_recognition.IImageRecognizer;
 
 import java.io.File;
 
@@ -81,7 +81,7 @@ public class Picture implements Comparable<Picture>
         }
     }
 
-    public static Picture FromFile(File imageFile, ImageRecognizer imageRecognizer) {
+    public static Picture FromFile(File imageFile, IImageRecognizer imageRecognizer) {
         // Decoding image bitmap.
         String filePath = imageFile.getAbsolutePath();
         Bitmap imageBitmap = BitmapFactory.decodeFile(filePath);
