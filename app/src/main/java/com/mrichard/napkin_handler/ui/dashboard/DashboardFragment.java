@@ -24,7 +24,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.mrichard.napkin_handler.data.db.NapkinDB;
 import com.mrichard.napkin_handler.data.image.ImageUtils;
-import com.mrichard.napkin_handler.data.image_recognition.ImageRecognizer;
+import com.mrichard.napkin_handler.data.image_recognition.ImageRecognizerStore;
 import com.mrichard.napkin_handler.data.model.picture.Picture;
 import com.mrichard.napkin_handler.databinding.FragmentDashboardBinding;
 import com.mrichard.napkin_handler.ui.dashboard.adapter.PictureGalleryAdapter;
@@ -53,8 +53,6 @@ public class DashboardFragment extends Fragment {
     private List<Picture> showPictures;
     private Set<Long> selectedPictures;
 
-    private ImageRecognizer imageRecognizer;
-
     private File imageFile;
     private Picture processedPicture;
 
@@ -66,7 +64,6 @@ public class DashboardFragment extends Fragment {
                 new ViewModelProvider(this).get(DashboardViewModel.class);
 
         napkinDB = NapkinDB.GetInstance(getContext());
-        imageRecognizer = new ImageRecognizer(getContext());
         dashboardViewModel.setNapkinDB(napkinDB);
         imageUtils = new ImageUtils();
 
@@ -157,7 +154,7 @@ public class DashboardFragment extends Fragment {
     }
 
     protected void processImageBitmap(File imageFile) {
-        processedPicture = Picture.FromFile(imageFile, imageRecognizer);
+        processedPicture = Picture.FromFile(imageFile, ImageRecognizerStore.GetInstance(getContext()));
 
         showPictures();
     }
