@@ -19,19 +19,24 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.mrichard.napkin_handler.data.db.NapkinDB;
 import com.mrichard.napkin_handler.data.image.ImageUtils;
 import com.mrichard.napkin_handler.data.image_recognition.ImageRecognizerStore;
 import com.mrichard.napkin_handler.data.model.picture.Picture;
 import com.mrichard.napkin_handler.databinding.FragmentHomeBinding;
+import com.mrichard.napkin_handler.ui.adapter.PictureGalleryAdapter;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 public class HomeFragment extends Fragment {
 
     private NapkinDB napkinDB;
+
+    private PictureGalleryAdapter newPicturesGalleryAdapter;
 
     private FragmentHomeBinding binding;
 
@@ -52,6 +57,10 @@ public class HomeFragment extends Fragment {
         // Inflating fragment.
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+        newPicturesGalleryAdapter = new PictureGalleryAdapter(getContext(), getActivity(), null);
+        binding.newPicturesGallery.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
+        binding.newPicturesGallery.setAdapter(newPicturesGalleryAdapter);
 
         // We open the camera.
         binding.buttonTakePicture.setOnClickListener(view -> {
@@ -96,6 +105,9 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        // We show the new automatically categorized pictures waiting for the approval of the user.
+        napkinDB.pictureDao().newPictures().observe(getViewLifecycleOwner(), this::onNewPicturesChanged);
+
         return root;
     }
 
@@ -103,6 +115,15 @@ public class HomeFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    /**
+     * Showing new pictures.
+     *
+     * @param newPictures
+     */
+    private void onNewPicturesChanged(List<Picture> newPictures) {
+        getActivity().runOnUiThread(() -> newPicturesGalleryAdapter.setPictures(newPictures));
     }
 
     /**
