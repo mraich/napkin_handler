@@ -76,6 +76,7 @@ public class Picture implements Comparable<Picture>
         this.path = path;
         this.attributes = attributes;
         this.attributesJson = GsonHandler.GetInstance().GetGson().toJson(this.attributes);
+        this.isNew = true;
 
         if (timestamp == null)
         {
