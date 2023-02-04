@@ -8,6 +8,7 @@
     <string name="home_object_class">Kép típusa</string>
     <string name="home_take_picture">Fényképez</string>
     <string name="home_launch_gallery">Galériából</string>
+    <string name="notifications_new_category">Új kategória</string>
     <string name="picture_gallery_content_description_picture">Kép</string>
     <string name="dashboard_to_swap">Cserék</string>
     <string name="dashboard_search_by_camera">Keresés kamerával</string>

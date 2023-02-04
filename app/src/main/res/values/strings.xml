@@ -8,6 +8,7 @@
     <string name="home_object_class">Object class</string>
     <string name="home_take_picture">Take Picture</string>
     <string name="home_launch_gallery">Launch Gallery</string>
+    <string name="notifications_new_category">New category</string>
     <string name="picture_gallery_content_description_picture">Picture</string>
     <string name="dashboard_to_swap">To swap</string>
     <string name="dashboard_search_by_camera">Search by camera</string>
