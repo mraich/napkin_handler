@@ -8,14 +8,17 @@ import androidx.room.RoomDatabase;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import com.mrichard.napkin_handler.data.model.category.Category;
+import com.mrichard.napkin_handler.data.model.category.ICategoryDao;
 import com.mrichard.napkin_handler.data.model.picture.IPictureDao;
 import com.mrichard.napkin_handler.data.model.picture.Picture;
 
 @Database(
     entities = {
-        Picture.class
+        Picture.class,
+        Category.class
     }
-    , version = 4
+    , version = 5
     , exportSchema = false
 )
 public abstract class
@@ -25,6 +28,8 @@ public abstract class
 {
 
     protected static final String DB_NAME = "NapkinDB";
+
+    public abstract ICategoryDao categoryDao();
 
     public abstract IPictureDao pictureDao();
 
@@ -55,6 +60,7 @@ public abstract class
                     .addMigrations(MIGRATION_1_2)
                     .addMigrations(MIGRATION_2_3)
                     .addMigrations(MIGRATION_3_4)
+                    .addMigrations(MIGRATION_4_5)
                     .build();
         }
         return
@@ -105,6 +111,21 @@ public abstract class
             database.execSQL("PRAGMA foreign_keys = 0;");
 
             database.execSQL("ALTER TABLE picture ADD is_new INTEGER NOT NULL DEFAULT 1;");
+
+            database.execSQL("PRAGMA foreign_keys = 1;");
+        }
+
+    };
+
+    public static final Migration MIGRATION_4_5 = new Migration(4, 5)
+    {
+
+        @Override
+        public void migrate(SupportSQLiteDatabase database)
+        {
+            database.execSQL("PRAGMA foreign_keys = 0;");
+
+            database.execSQL("CREATE TABLE category (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, timestamp INTEGER NOT NULL DEFAULT (strftime('%s', 'now')));");
 
             database.execSQL("PRAGMA foreign_keys = 1;");
         }
