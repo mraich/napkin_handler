@@ -2,6 +2,7 @@ package com.mrichard.napkin_handler.data.db;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
@@ -42,7 +43,7 @@ public class
             {
                 SQLiteDatabase sqLiteDatabase = getReadableDatabase();
             } catch (
-                    Exception e
+                    SQLiteException e
             )
             {
                 // Expect an Exception like this:
