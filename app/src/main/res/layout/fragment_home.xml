@@ -7,8 +7,7 @@
     android:paddingBottom="60dp"
     tools:context=".ui.home.HomeFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/new_pictures_gallery"
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:textAlignment="center"
@@ -16,7 +15,16 @@
         app:layout_constraintBottom_toTopOf="@+id/button_take_picture"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" >
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/new_pictures_gallery"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textAlignment="center"
+            android:textSize="20sp" />
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/button_take_picture"
