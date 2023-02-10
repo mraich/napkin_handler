@@ -24,8 +24,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.mrichard.napkin_handler.data.db.NapkinDB;
 import com.mrichard.napkin_handler.data.image.ImageUtils;
 import com.mrichard.napkin_handler.data.image_recognition.ImageRecognizerStore;
+import com.mrichard.napkin_handler.data.model.category.Category;
 import com.mrichard.napkin_handler.data.model.picture.Picture;
 import com.mrichard.napkin_handler.databinding.FragmentHomeBinding;
+import com.mrichard.napkin_handler.ui.adapter.CategoryAdapter;
 import com.mrichard.napkin_handler.ui.adapter.PictureGalleryAdapter;
 
 import java.io.File;
@@ -37,6 +39,8 @@ public class HomeFragment extends Fragment {
     private NapkinDB napkinDB;
 
     private PictureGalleryAdapter newPicturesGalleryAdapter;
+
+    private CategoryAdapter categoryAdapter;
 
     private FragmentHomeBinding binding;
 
@@ -61,6 +65,10 @@ public class HomeFragment extends Fragment {
         newPicturesGalleryAdapter = new PictureGalleryAdapter(getContext(), getActivity(), null);
         binding.newPicturesGallery.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
         binding.newPicturesGallery.setAdapter(newPicturesGalleryAdapter);
+
+        categoryAdapter = new CategoryAdapter(getContext(), getActivity());
+        binding.categoriesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
+        binding.categoriesRecyclerView.setAdapter(categoryAdapter);
 
         // We open the camera.
         binding.buttonTakePicture.setOnClickListener(view -> {
@@ -108,6 +116,9 @@ public class HomeFragment extends Fragment {
         // We show the new automatically categorized pictures waiting for the approval of the user.
         napkinDB.pictureDao().newPictures().observe(getViewLifecycleOwner(), this::onNewPicturesChanged);
 
+        // We show the available categories automatically.
+        napkinDB.categoryDao().getAll().observe(getViewLifecycleOwner(), this::onCategoriesChanged);
+
         return root;
     }
 
@@ -124,6 +135,15 @@ public class HomeFragment extends Fragment {
      */
     private void onNewPicturesChanged(List<Picture> newPictures) {
         getActivity().runOnUiThread(() -> newPicturesGalleryAdapter.setPictures(newPictures));
+    }
+
+    /**
+     * Showing new pictures.
+     *
+     * @param newCategories
+     */
+    private void onCategoriesChanged(List<Category> newCategories) {
+        getActivity().runOnUiThread(() -> categoryAdapter.setCategories(newCategories));
     }
 
     /**
