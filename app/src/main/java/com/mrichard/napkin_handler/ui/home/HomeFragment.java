@@ -10,10 +10,12 @@ import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
@@ -21,6 +23,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.mrichard.napkin_handler.R;
 import com.mrichard.napkin_handler.data.db.NapkinDB;
 import com.mrichard.napkin_handler.data.image.ImageUtils;
 import com.mrichard.napkin_handler.data.image_recognition.ImageRecognizerStore;
@@ -69,6 +72,28 @@ public class HomeFragment extends Fragment {
         categoryAdapter = new CategoryAdapter(getContext(), getActivity());
         binding.categoriesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
         binding.categoriesRecyclerView.setAdapter(categoryAdapter);
+
+        // Creating new category.
+        binding.buttonNewCategory.setOnClickListener(view -> {
+            AlertDialog.Builder alert = new AlertDialog.Builder(view.getContext());
+
+            alert.setTitle(getResources().getString(R.string.home_new_category));
+
+            final EditText inputEditText = new EditText(view.getContext());
+            alert.setView(inputEditText);
+
+            alert.setPositiveButton(getResources().getString(R.string.ok), (dialog, whichButton) -> {
+                String value = inputEditText.getText().toString();
+                if (!value.equals("")) {
+                    Thread thread = new Thread(() -> napkinDB.categoryDao().insert(new Category(value)));
+                    thread.start();
+                    }
+                });
+
+            alert.setNegativeButton(getResources().getString(R.string.cancel), (dialog, whichButton) -> { });
+
+            alert.show();
+        });
 
         // We open the camera.
         binding.buttonTakePicture.setOnClickListener(view -> {

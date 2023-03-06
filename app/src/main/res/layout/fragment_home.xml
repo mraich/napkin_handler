@@ -12,7 +12,7 @@
         android:layout_height="0dp"
         android:textAlignment="center"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/button_take_picture"
+        app:layout_constraintBottom_toTopOf="@+id/button_new_category"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" >
@@ -34,6 +34,19 @@
             android:textSize="20sp" />
 
     </LinearLayout>
+
+    <Button
+        android:id="@+id/button_new_category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="@string/home_new_category"
+        android:textAllCaps="false"
+        android:textSize="21sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/button_take_picture"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/button_take_picture"

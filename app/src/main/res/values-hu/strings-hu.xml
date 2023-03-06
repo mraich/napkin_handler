@@ -1,11 +1,14 @@
 <resources>
     <string name="app_name">SzalvétaRendező</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Mégsem</string>
     <string name="title_home">Felvétel</string>
     <string name="title_dashboard">Galéria</string>
     <string name="title_notifications">Kategóriák</string>
     <string name="home_classified_as">Felismert: </string>
     <string name="home_content_description_picture">Kép</string>
     <string name="home_object_class">Kép típusa</string>
+    <string name="home_new_category">Új kategória</string>
     <string name="home_take_picture">Fényképez</string>
     <string name="home_launch_gallery">Galériából</string>
     <string name="notifications_new_category">Új kategória</string>
