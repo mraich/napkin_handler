@@ -3,10 +3,16 @@ package com.mrichard.napkin_handler.ui.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.mrichard.napkin_handler.R;
+import com.mrichard.napkin_handler.data.db.NapkinDB;
 import com.mrichard.napkin_handler.data.model.category.Category;
 import com.mrichard.napkin_handler.databinding.CategoryItemBinding;
 import com.mrichard.napkin_handler.ui.FontManager;
@@ -56,6 +62,30 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryViewHolder> {
         final Category category = categories.get(position);
 
         holder.getBinding().categoryNameTextView.setText(category.getName());
+        holder.getBinding().getRoot().setOnLongClickListener(view -> {
+            AlertDialog.Builder alert = new AlertDialog.Builder(view.getContext());
+
+            alert.setTitle(view.getResources().getString(R.string.are_you_sure_to_delete_category));
+
+            final TextView categoryTextView = new TextView(view.getContext());
+            alert.setView(categoryTextView);
+
+            categoryTextView.setText(category.getName());
+
+            alert.setPositiveButton(view.getResources().getString(R.string.ok), (dialog, whichButton) -> {
+                Thread thread = new Thread(() -> {
+                    NapkinDB napkinDB = NapkinDB.GetInstance(view.getContext());
+                    napkinDB.categoryDao().delete(category);
+                });
+                thread.run();
+            });
+
+            alert.setNegativeButton(view.getResources().getString(R.string.cancel), (dialog, whichButton) -> { });
+
+            alert.show();
+
+            return false;
+        });
     }
 
     @Override

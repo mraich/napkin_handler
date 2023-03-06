@@ -2,6 +2,7 @@
     <string name="app_name">SzalvétaRendező</string>
     <string name="ok">OK</string>
     <string name="cancel">Mégsem</string>
+    <string name="are_you_sure_to_delete_category">Törli a kategóriát?</string>
     <string name="title_home">Felvétel</string>
     <string name="title_dashboard">Galéria</string>
     <string name="title_notifications">Kategóriák</string>

@@ -2,6 +2,7 @@
     <string name="app_name">NapkinHandler</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="are_you_sure_to_delete_category">Delete category?</string>
     <string name="title_home">Picture</string>
     <string name="title_dashboard">Gallery</string>
     <string name="title_notifications">Categories</string>
