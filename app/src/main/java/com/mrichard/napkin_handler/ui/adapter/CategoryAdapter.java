@@ -77,7 +77,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryViewHolder> {
                     NapkinDB napkinDB = NapkinDB.GetInstance(view.getContext());
                     napkinDB.categoryDao().delete(category);
                 });
-                thread.run();
+                thread.start();
             });
 
             alert.setNegativeButton(view.getResources().getString(R.string.cancel), (dialog, whichButton) -> { });
