@@ -29,6 +29,7 @@ import com.mrichard.napkin_handler.data.image.ImageUtils;
 import com.mrichard.napkin_handler.data.image_recognition.ImageRecognizerStore;
 import com.mrichard.napkin_handler.data.model.category.Category;
 import com.mrichard.napkin_handler.data.model.picture.Picture;
+import com.mrichard.napkin_handler.data.viewmodel.NapkinSelectorViewModel;
 import com.mrichard.napkin_handler.databinding.FragmentHomeBinding;
 import com.mrichard.napkin_handler.ui.adapter.CategoryAdapter;
 import com.mrichard.napkin_handler.ui.adapter.PictureGalleryAdapter;
@@ -49,6 +50,8 @@ public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
 
+    private NapkinSelectorViewModel napkinSelectorViewModel;
+
     private ImageUtils imageUtils;
 
     private File imageFile;
@@ -57,15 +60,17 @@ public class HomeFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
 
+        napkinSelectorViewModel = new ViewModelProvider(this).get(SingleNapkinSelectorViewModel.class);
         // Antipattern, but works.
         napkinDB = NapkinDB.GetInstance(getContext());
+        napkinSelectorViewModel.setNapkinDB(napkinDB);
         imageUtils = new ImageUtils();
 
         // Inflating fragment.
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        newPicturesGalleryAdapter = new PictureGalleryAdapter(getContext(), getActivity(), null);
+        newPicturesGalleryAdapter = new PictureGalleryAdapter(getContext(), getActivity(), napkinSelectorViewModel);
         binding.newPicturesGallery.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
         binding.newPicturesGallery.setAdapter(newPicturesGalleryAdapter);
 
