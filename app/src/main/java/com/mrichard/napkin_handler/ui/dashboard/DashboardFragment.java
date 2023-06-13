@@ -41,7 +41,7 @@ public class DashboardFragment extends Fragment {
 
     private PictureGalleryAdapter pictureGalleryAdapter;
 
-    private DashboardViewModel dashboardViewModel;
+    private MultipleNapkinSelectorViewModel multipleNapkinSelectorViewModel;
 
     private ImageUtils imageUtils;
 
@@ -58,17 +58,17 @@ public class DashboardFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        dashboardViewModel =
-                new ViewModelProvider(this).get(DashboardViewModel.class);
+        multipleNapkinSelectorViewModel =
+                new ViewModelProvider(this).get(MultipleNapkinSelectorViewModel.class);
 
         napkinDB = NapkinDB.GetInstance(getContext());
-        dashboardViewModel.setNapkinDB(napkinDB);
+        multipleNapkinSelectorViewModel.setNapkinDB(napkinDB);
         imageUtils = new ImageUtils();
 
         binding = FragmentDashboardBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        pictureGalleryAdapter = new PictureGalleryAdapter(getContext(), getActivity(), dashboardViewModel);
+        pictureGalleryAdapter = new PictureGalleryAdapter(getContext(), getActivity(), multipleNapkinSelectorViewModel);
         binding.pictureGallery.setLayoutManager(new GridLayoutManager(getActivity().getApplicationContext(), 2));
         binding.pictureGallery.setAdapter(pictureGalleryAdapter);
 
@@ -120,9 +120,9 @@ public class DashboardFragment extends Fragment {
             showPictures();
         });
 
-        dashboardViewModel.getPictures().observe(getViewLifecycleOwner(), this::onPicturesChanged);
+        multipleNapkinSelectorViewModel.getPictures().observe(getViewLifecycleOwner(), this::onPicturesChanged);
 
-        dashboardViewModel.selectedPictures().observe(getViewLifecycleOwner(), this::onSelectedPicturesChanged);
+        multipleNapkinSelectorViewModel.selectedPictures().observe(getViewLifecycleOwner(), this::onSelectedPicturesChanged);
 
         return root;
     }
@@ -170,7 +170,7 @@ public class DashboardFragment extends Fragment {
                     Collections.sort(pictures);
 
                     // The picture is no longer selected.
-                    getActivity().runOnUiThread(() -> dashboardViewModel.onClickPicture(selectedPicture.getId()));
+                    getActivity().runOnUiThread(() -> multipleNapkinSelectorViewModel.onClickPicture(selectedPicture.getId()));
                 }
             }
             {
