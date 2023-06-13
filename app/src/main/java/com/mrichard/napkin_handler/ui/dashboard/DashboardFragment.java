@@ -25,6 +25,7 @@ import com.mrichard.napkin_handler.data.db.NapkinDB;
 import com.mrichard.napkin_handler.data.image.ImageUtils;
 import com.mrichard.napkin_handler.data.image_recognition.ImageRecognizerStore;
 import com.mrichard.napkin_handler.data.model.picture.Picture;
+import com.mrichard.napkin_handler.data.viewmodel.NapkinSelectorViewModel;
 import com.mrichard.napkin_handler.databinding.FragmentDashboardBinding;
 import com.mrichard.napkin_handler.ui.adapter.PictureGalleryAdapter;
 
@@ -41,7 +42,7 @@ public class DashboardFragment extends Fragment {
 
     private PictureGalleryAdapter pictureGalleryAdapter;
 
-    private MultipleNapkinSelectorViewModel multipleNapkinSelectorViewModel;
+    private NapkinSelectorViewModel napkinSelectorViewModel;
 
     private ImageUtils imageUtils;
 
@@ -58,17 +59,17 @@ public class DashboardFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        multipleNapkinSelectorViewModel =
+        napkinSelectorViewModel =
                 new ViewModelProvider(this).get(MultipleNapkinSelectorViewModel.class);
 
         napkinDB = NapkinDB.GetInstance(getContext());
-        multipleNapkinSelectorViewModel.setNapkinDB(napkinDB);
+        napkinSelectorViewModel.setNapkinDB(napkinDB);
         imageUtils = new ImageUtils();
 
         binding = FragmentDashboardBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        pictureGalleryAdapter = new PictureGalleryAdapter(getContext(), getActivity(), multipleNapkinSelectorViewModel);
+        pictureGalleryAdapter = new PictureGalleryAdapter(getContext(), getActivity(), napkinSelectorViewModel);
         binding.pictureGallery.setLayoutManager(new GridLayoutManager(getActivity().getApplicationContext(), 2));
         binding.pictureGallery.setAdapter(pictureGalleryAdapter);
 
@@ -120,9 +121,9 @@ public class DashboardFragment extends Fragment {
             showPictures();
         });
 
-        multipleNapkinSelectorViewModel.getPictures().observe(getViewLifecycleOwner(), this::onPicturesChanged);
+        napkinSelectorViewModel.getPictures().observe(getViewLifecycleOwner(), this::onPicturesChanged);
 
-        multipleNapkinSelectorViewModel.selectedPictures().observe(getViewLifecycleOwner(), this::onSelectedPicturesChanged);
+        napkinSelectorViewModel.selectedPictures().observe(getViewLifecycleOwner(), this::onSelectedPicturesChanged);
 
         return root;
     }
@@ -170,7 +171,7 @@ public class DashboardFragment extends Fragment {
                     Collections.sort(pictures);
 
                     // The picture is no longer selected.
-                    getActivity().runOnUiThread(() -> multipleNapkinSelectorViewModel.onClickPicture(selectedPicture.getId()));
+                    getActivity().runOnUiThread(() -> napkinSelectorViewModel.onClickPicture(selectedPicture.getId()));
                 }
             }
             {
