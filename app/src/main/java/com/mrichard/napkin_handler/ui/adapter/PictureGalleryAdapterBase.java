@@ -64,6 +64,8 @@ public class PictureGalleryAdapterBase extends RecyclerView.Adapter<PictureGalle
 
     public void setSelectedPictures(Set<Long> selectedPictures) {
         this.selectedPictures = selectedPictures;
+
+        notifyDataSetChanged();
     }
 
     @Override
