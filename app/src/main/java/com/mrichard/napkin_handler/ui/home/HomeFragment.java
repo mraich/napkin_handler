@@ -37,6 +37,7 @@ import com.mrichard.napkin_handler.ui.adapter.PictureGalleryAdapter;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 public class HomeFragment extends Fragment {
 
@@ -149,6 +150,8 @@ public class HomeFragment extends Fragment {
         // We show the available categories automatically.
         napkinDB.categoryDao().getAll().observe(getViewLifecycleOwner(), this::onCategoriesChanged);
 
+        napkinSelectorViewModel.selectedPictures().observe(getViewLifecycleOwner(), this::onSelectedPicturesChanged);
+
         return root;
     }
 
@@ -174,6 +177,14 @@ public class HomeFragment extends Fragment {
      */
     private void onCategoriesChanged(List<Category> newCategories) {
         getActivity().runOnUiThread(() -> categoryAdapter.setCategories(newCategories));
+    }
+
+    /**
+     * Marking the selected pictures.
+     * @param selectedPictures The ids of the selected pictures.
+     */
+    private void onSelectedPicturesChanged(Set<Long> selectedPictures) {
+        newPicturesGalleryAdapter.setSelectedPictures(selectedPictures);
     }
 
     /**
