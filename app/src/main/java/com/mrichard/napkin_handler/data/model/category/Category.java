@@ -16,6 +16,7 @@ public class Category
     public static final String CATEGORY_TABLE = "category";
     public static final String COLUMN_NAME = "name";
     public static final String COLUMN_TIMESTAMP = "timestamp";
+    public static final String COLUMN_BASIC = "basic";
 
     @PrimaryKey(autoGenerate = true)
     @Nullable
@@ -28,6 +29,10 @@ public class Category
     @ColumnInfo(name = COLUMN_TIMESTAMP)
     @NonNull
     protected long timestamp;
+
+    @ColumnInfo(name = COLUMN_BASIC)
+    @NonNull
+    protected boolean basic;
 
     // We need this constructor for Room.
     protected Category()  {
@@ -62,5 +67,7 @@ public class Category
     public String getName() {
         return name;
     }
+
+    public Boolean isBasic() { return basic; }
 
 }
