@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 
 import com.mrichard.napkin_handler.data.model.picture.Picture;
-import com.mrichard.napkin_handler.ui.dashboard.DashboardViewModel;
+import com.mrichard.napkin_handler.data.viewmodel.NapkinSelectorViewModel;
 
 import java.util.Set;
 
@@ -12,8 +12,8 @@ public class PictureGalleryAdapter extends PictureGalleryAdapterBase {
 
     private Set<Long> selectedPictures;
 
-    public PictureGalleryAdapter(Context context, Activity activity, DashboardViewModel dashboardViewModel) {
-        super(context, activity, dashboardViewModel);
+    public PictureGalleryAdapter(Context context, Activity activity, NapkinSelectorViewModel napkinSelectorViewModel) {
+        super(context, activity, napkinSelectorViewModel);
     }
 
     public void setSelectedPictures(Set<Long> selectedPictures) {

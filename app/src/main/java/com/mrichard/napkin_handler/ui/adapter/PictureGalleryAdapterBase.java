@@ -11,9 +11,9 @@ import com.bumptech.glide.Glide;
 import com.mrichard.napkin_handler.R;
 import com.mrichard.napkin_handler.data.db.NapkinDB;
 import com.mrichard.napkin_handler.data.model.picture.Picture;
+import com.mrichard.napkin_handler.data.viewmodel.NapkinSelectorViewModel;
 import com.mrichard.napkin_handler.databinding.PictureGalleryItemBinding;
 import com.mrichard.napkin_handler.ui.FontManager;
-import com.mrichard.napkin_handler.ui.dashboard.DashboardViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,18 +25,18 @@ public class PictureGalleryAdapterBase extends RecyclerView.Adapter<PictureGalle
 
     private Activity activity;
 
-    protected DashboardViewModel dashboardViewModel;
+    protected NapkinSelectorViewModel napkinSelectorViewModel;
 
     protected List<Picture> pictures;
 
     private Set<Long> selectedPictures;
 
-    public PictureGalleryAdapterBase(Context context, Activity activity, DashboardViewModel dashboardViewModel) {
+    public PictureGalleryAdapterBase(Context context, Activity activity, NapkinSelectorViewModel napkinSelectorViewModel) {
         this.context = context;
 
         this.activity = activity;
 
-        this.dashboardViewModel = dashboardViewModel;
+        this.napkinSelectorViewModel = napkinSelectorViewModel;
 
         this.pictures = new ArrayList<>();
     }
@@ -84,8 +84,8 @@ public class PictureGalleryAdapterBase extends RecyclerView.Adapter<PictureGalle
 
         // Clicking the picture.
         holder.getBinding().imageViewPicture.setOnClickListener(view -> {
-            if (dashboardViewModel != null) {
-                dashboardViewModel.onClickPicture(picture.getId());
+            if (napkinSelectorViewModel != null) {
+                napkinSelectorViewModel.onClickPicture(picture.getId());
 
                 showSelection(holder, picture);
             }
