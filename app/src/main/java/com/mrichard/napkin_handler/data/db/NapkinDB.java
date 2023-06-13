@@ -18,7 +18,7 @@ import com.mrichard.napkin_handler.data.model.picture.Picture;
         Picture.class,
         Category.class
     }
-    , version = 6
+    , version = 7
     , exportSchema = false
 )
 public abstract class
@@ -62,6 +62,7 @@ public abstract class
                     .addMigrations(MIGRATION_3_4)
                     .addMigrations(MIGRATION_4_5)
                     .addMigrations(MIGRATION_5_6)
+                    .addMigrations(MIGRATION_6_7)
                     .build();
         }
         return
@@ -148,6 +149,23 @@ public abstract class
             database.execSQL("INSERT INTO category(name) VALUES ('Poháralátét')");
             database.execSQL("INSERT INTO category(name) VALUES ('Fagyis')");
             database.execSQL("INSERT INTO category(name) VALUES ('Egy színű')");
+
+            database.execSQL("PRAGMA foreign_keys = 1;");
+        }
+
+    };
+
+    public static final Migration MIGRATION_6_7 = new Migration(6, 7)
+    {
+
+        @Override
+        public void migrate(SupportSQLiteDatabase database)
+        {
+            database.execSQL("PRAGMA foreign_keys = 0;");
+
+            // Basic category means it's built in the ImageRecognizer.
+            // By default every category is not a basic category when the user adds them.
+            database.execSQL("ALTER TABLE category ADD basic INTEGER NOT NULL DEFAULT 0;");
 
             database.execSQL("PRAGMA foreign_keys = 1;");
         }
