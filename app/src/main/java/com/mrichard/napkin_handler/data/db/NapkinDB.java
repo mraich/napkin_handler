@@ -18,7 +18,7 @@ import com.mrichard.napkin_handler.data.model.picture.Picture;
         Picture.class,
         Category.class
     }
-    , version = 5
+    , version = 6
     , exportSchema = false
 )
 public abstract class
@@ -61,6 +61,7 @@ public abstract class
                     .addMigrations(MIGRATION_2_3)
                     .addMigrations(MIGRATION_3_4)
                     .addMigrations(MIGRATION_4_5)
+                    .addMigrations(MIGRATION_5_6)
                     .build();
         }
         return
@@ -126,6 +127,27 @@ public abstract class
             database.execSQL("PRAGMA foreign_keys = 0;");
 
             database.execSQL("CREATE TABLE category (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, timestamp INTEGER NOT NULL DEFAULT (strftime('%s', 'now')));");
+
+            database.execSQL("PRAGMA foreign_keys = 1;");
+        }
+
+    };
+
+    public static final Migration MIGRATION_5_6 = new Migration(5, 6)
+    {
+
+        @Override
+        public void migrate(SupportSQLiteDatabase database)
+        {
+            database.execSQL("PRAGMA foreign_keys = 0;");
+
+            // Creating built in categories.
+            database.execSQL("INSERT INTO category(name) VALUES ('Coca-Cola')");
+            database.execSQL("INSERT INTO category(name) VALUES ('Pöttyös')");
+            database.execSQL("INSERT INTO category(name) VALUES ('Formára vágott')");
+            database.execSQL("INSERT INTO category(name) VALUES ('Poháralátét')");
+            database.execSQL("INSERT INTO category(name) VALUES ('Fagyis')");
+            database.execSQL("INSERT INTO category(name) VALUES ('Egy színű')");
 
             database.execSQL("PRAGMA foreign_keys = 1;");
         }
