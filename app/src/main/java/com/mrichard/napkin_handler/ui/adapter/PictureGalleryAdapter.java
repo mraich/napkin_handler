@@ -20,24 +20,6 @@ public class PictureGalleryAdapter extends PictureGalleryAdapterBase {
         this.selectedPictures = selectedPictures;
     }
 
-    @Override
-    public void onBindViewHolder(final PictureGalleryViewHolder holder, int position) {
-        super.onBindViewHolder(holder, position);
-
-        final Picture picture = pictures.get(position);
-
-        showSelection(holder, picture);
-
-        // Clicking the picture.
-        holder.getBinding().imageViewPicture.setOnClickListener(view -> {
-            if (dashboardViewModel != null) {
-                dashboardViewModel.onClickPicture(picture.getId());
-
-                showSelection(holder, picture);
-            }
-        });
-    }
-
     // Showing the selection of a picture.
     private void showSelection(PictureGalleryViewHolder holder, Picture picture) {
         if (selectedPictures != null && selectedPictures.contains(picture.getId())) {
