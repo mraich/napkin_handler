@@ -18,7 +18,7 @@ import com.mrichard.napkin_handler.data.model.picture.Picture;
         Picture.class,
         Category.class
     }
-    , version = 8
+    , version = 9
     , exportSchema = false
 )
 public abstract class
@@ -64,6 +64,7 @@ public abstract class
                     .addMigrations(MIGRATION_5_6)
                     .addMigrations(MIGRATION_6_7)
                     .addMigrations(MIGRATION_7_8)
+                    .addMigrations(MIGRATION_8_9)
                     .build();
         }
         return
@@ -183,6 +184,28 @@ public abstract class
 
             // At creation time we can assume every category present now is a basic category.
             database.execSQL("UPDATE category SET basic = 1;");
+
+            database.execSQL("PRAGMA foreign_keys = 1;");
+        }
+
+    };
+
+    public static final Migration MIGRATION_8_9 = new Migration(8, 9)
+    {
+
+        @Override
+        public void migrate(SupportSQLiteDatabase database)
+        {
+            database.execSQL("PRAGMA foreign_keys = 0;");
+
+            database.execSQL("CREATE TABLE category_of_picture (" +
+                    "category_id INTEGER NOT NULL," +
+                    "picture_id INTEGER NOT NULL," +
+                    "FOREIGN KEY (category_id) REFERENCES category (id) ON DELETE CASCADE," +
+                    "FOREIGN KEY (picture_id) REFERENCES picture (id) ON DELETE CASCADE," +
+                    "PRIMARY KEY (category_id, picture_id)" +
+                    ");"
+            );
 
             database.execSQL("PRAGMA foreign_keys = 1;");
         }
