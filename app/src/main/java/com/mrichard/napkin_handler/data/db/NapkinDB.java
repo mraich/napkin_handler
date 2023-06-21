@@ -10,13 +10,16 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.mrichard.napkin_handler.data.model.category.Category;
 import com.mrichard.napkin_handler.data.model.category.ICategoryDao;
+import com.mrichard.napkin_handler.data.model.category_of_picture.CategoryOfPicture;
+import com.mrichard.napkin_handler.data.model.category_of_picture.ICategoryOfPictureDao;
 import com.mrichard.napkin_handler.data.model.picture.IPictureDao;
 import com.mrichard.napkin_handler.data.model.picture.Picture;
 
 @Database(
     entities = {
         Picture.class,
-        Category.class
+        Category.class,
+        CategoryOfPicture.class
     }
     , version = 9
     , exportSchema = false
@@ -32,6 +35,8 @@ public abstract class
     public abstract ICategoryDao categoryDao();
 
     public abstract IPictureDao pictureDao();
+
+    public abstract ICategoryOfPictureDao categoryOfPictureDao();
 
     private static NapkinDB INSTANCE;
 
