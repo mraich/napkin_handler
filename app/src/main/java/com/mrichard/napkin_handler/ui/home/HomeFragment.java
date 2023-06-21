@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +29,7 @@ import com.mrichard.napkin_handler.data.image.ImageUtils;
 import com.mrichard.napkin_handler.data.image_recognition.ImageRecognizerStore;
 import com.mrichard.napkin_handler.data.model.category.Category;
 import com.mrichard.napkin_handler.data.model.picture.Picture;
-import com.mrichard.napkin_handler.data.viewmodel.NapkinSelectorViewModel;
+import com.mrichard.napkin_handler.data.viewmodel.SelectorViewModelBase;
 import com.mrichard.napkin_handler.databinding.FragmentHomeBinding;
 import com.mrichard.napkin_handler.ui.adapter.CategoryAdapter;
 import com.mrichard.napkin_handler.ui.adapter.PictureGalleryAdapter;
@@ -52,7 +51,7 @@ public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
 
-    private NapkinSelectorViewModel napkinSelectorViewModel;
+    private SelectorViewModelBase napkinSelectorViewModel;
 
     private ImageUtils imageUtils;
 

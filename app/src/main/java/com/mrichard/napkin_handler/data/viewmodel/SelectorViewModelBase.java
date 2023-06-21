@@ -11,12 +11,12 @@ import java.util.Set;
  * This is the base ViewModel for the ViewModels used to
  * handle the selection of the napkins.
  */
-public abstract class NapkinSelectorViewModel extends ViewModel {
+public abstract class SelectorViewModelBase extends ViewModel {
 
     // The ids of the selected data.
     protected MutableLiveData<Set<Long>> selected = new MutableLiveData<>();
 
-    public NapkinSelectorViewModel() {
+    public SelectorViewModelBase() {
         selected.setValue(new HashSet<>());
     }
 

@@ -11,7 +11,7 @@ import com.bumptech.glide.Glide;
 import com.mrichard.napkin_handler.R;
 import com.mrichard.napkin_handler.data.db.NapkinDB;
 import com.mrichard.napkin_handler.data.model.picture.Picture;
-import com.mrichard.napkin_handler.data.viewmodel.NapkinSelectorViewModel;
+import com.mrichard.napkin_handler.data.viewmodel.SelectorViewModelBase;
 import com.mrichard.napkin_handler.databinding.PictureGalleryItemBinding;
 import com.mrichard.napkin_handler.ui.FontManager;
 
@@ -25,13 +25,13 @@ public class PictureGalleryAdapterBase extends RecyclerView.Adapter<PictureGalle
 
     private Activity activity;
 
-    protected NapkinSelectorViewModel napkinSelectorViewModel;
+    protected SelectorViewModelBase napkinSelectorViewModel;
 
     protected List<Picture> pictures;
 
     private Set<Long> selectedPictures;
 
-    public PictureGalleryAdapterBase(Context context, Activity activity, NapkinSelectorViewModel napkinSelectorViewModel) {
+    public PictureGalleryAdapterBase(Context context, Activity activity, SelectorViewModelBase napkinSelectorViewModel) {
         this.context = context;
 
         this.activity = activity;
