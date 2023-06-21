@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,7 +65,6 @@ public class HomeFragment extends Fragment {
         napkinSelectorViewModel = new ViewModelProvider(this).get(SingleNapkinSelectorViewModel.class);
         // Antipattern, but works.
         napkinDB = NapkinDB.GetInstance(getContext());
-        napkinSelectorViewModel.setNapkinDB(napkinDB);
         imageUtils = new ImageUtils();
 
         // Inflating fragment.
@@ -150,7 +150,7 @@ public class HomeFragment extends Fragment {
         // We show the available categories automatically.
         napkinDB.categoryDao().getAll().observe(getViewLifecycleOwner(), this::onCategoriesChanged);
 
-        napkinSelectorViewModel.selectedPictures().observe(getViewLifecycleOwner(), this::onSelectedPicturesChanged);
+        napkinSelectorViewModel.selected().observe(getViewLifecycleOwner(), this::onSelectedPicturesChanged);
 
         return root;
     }

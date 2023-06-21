@@ -13,14 +13,14 @@ public class SingleNapkinSelectorViewModel extends NapkinSelectorViewModel {
 
     public void onClickPicture(Long id) {
         Set<Long> selectedPicturesSet = new HashSet<>();
-        if (!selectedPictures.getValue().contains(id)) {
+        if (!selected.getValue().contains(id)) {
             selectedPicturesSet.add(id);
         }
 
-        selectedPictures.setValue(selectedPicturesSet);
+        selected.setValue(selectedPicturesSet);
 
         // Refreshing. :)
-        selectedPictures.setValue(selectedPictures.getValue());
+        selected.setValue(selected.getValue());
     }
 
 }

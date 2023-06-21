@@ -9,14 +9,14 @@ import com.mrichard.napkin_handler.data.viewmodel.NapkinSelectorViewModel;
 public class MultipleNapkinSelectorViewModel extends NapkinSelectorViewModel {
 
     public void onClickPicture(Long id) {
-        if (!selectedPictures.getValue().contains(id)) {
-            selectedPictures.getValue().add(id);
+        if (!selected.getValue().contains(id)) {
+            selected.getValue().add(id);
         } else {
-            selectedPictures.getValue().remove(id);
+            selected.getValue().remove(id);
         }
 
         // Refreshing. :)
-        selectedPictures.setValue(selectedPictures.getValue());
+        selected.setValue(selected.getValue());
     }
 
 }

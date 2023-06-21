@@ -63,7 +63,6 @@ public class DashboardFragment extends Fragment {
                 new ViewModelProvider(this).get(MultipleNapkinSelectorViewModel.class);
 
         napkinDB = NapkinDB.GetInstance(getContext());
-        napkinSelectorViewModel.setNapkinDB(napkinDB);
         imageUtils = new ImageUtils();
 
         binding = FragmentDashboardBinding.inflate(inflater, container, false);
@@ -121,9 +120,9 @@ public class DashboardFragment extends Fragment {
             showPictures();
         });
 
-        napkinSelectorViewModel.getPictures().observe(getViewLifecycleOwner(), this::onPicturesChanged);
+        napkinDB.pictureDao().getAll().observe(getViewLifecycleOwner(), this::onPicturesChanged);
 
-        napkinSelectorViewModel.selectedPictures().observe(getViewLifecycleOwner(), this::onSelectedPicturesChanged);
+        napkinSelectorViewModel.selected().observe(getViewLifecycleOwner(), this::onSelectedPicturesChanged);
 
         return root;
     }
