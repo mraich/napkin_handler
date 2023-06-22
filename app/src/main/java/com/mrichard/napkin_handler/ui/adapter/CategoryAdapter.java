@@ -14,11 +14,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.mrichard.napkin_handler.R;
 import com.mrichard.napkin_handler.data.db.NapkinDB;
 import com.mrichard.napkin_handler.data.model.category.Category;
+import com.mrichard.napkin_handler.data.model.picture.Picture;
+import com.mrichard.napkin_handler.data.viewmodel.SelectorViewModelBase;
 import com.mrichard.napkin_handler.databinding.CategoryItemBinding;
 import com.mrichard.napkin_handler.ui.FontManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryViewHolder> {
 
@@ -26,12 +29,22 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryViewHolder> {
 
     private Activity activity;
 
+    private SelectorViewModelBase categorySelectorViewModel;
+
     private List<Category> categories;
 
+    private Set<Long> selectedCategories;
+
     public CategoryAdapter(Context context, Activity activity) {
+        this(context, activity, null);
+    }
+
+    public CategoryAdapter(Context context, Activity activity, SelectorViewModelBase categorySelectorViewModel) {
         this.context = context;
 
         this.activity = activity;
+
+        this.categorySelectorViewModel = categorySelectorViewModel;
 
         this.categories = new ArrayList<>();
     }
@@ -57,11 +70,27 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryViewHolder> {
         notifyDataSetChanged();
     }
 
+    public void setSelectedCategories(Set<Long> selectedCategories) {
+        this.selectedCategories = selectedCategories;
+
+        notifyDataSetChanged();
+    }
+
     @Override
     public void onBindViewHolder(final CategoryViewHolder holder, int position) {
         final Category category = categories.get(position);
 
+        showSelection(holder, category);
+
         holder.getBinding().categoryNameTextView.setText(category.getName());
+        // Clicking the picture.
+        holder.getBinding().getRoot().setOnClickListener(view -> {
+            if (categorySelectorViewModel != null) {
+                categorySelectorViewModel.onClickPicture(category.getId());
+
+                showSelection(holder, category);
+            }
+        });
         holder.getBinding().getRoot().setOnLongClickListener(view -> {
             AlertDialog.Builder alert = new AlertDialog.Builder(view.getContext());
 
@@ -91,6 +120,15 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryViewHolder> {
     @Override
     public int getItemCount() {
         return categories.size();
+    }
+
+    // Showing the selection of a category.
+    private void showSelection(CategoryViewHolder holder, Category category) {
+        if (selectedCategories != null && selectedCategories.contains(category.getId())) {
+            holder.getBinding().getRoot().setBackgroundColor(context.getResources().getColor(com.google.android.material.R.color.material_blue_grey_800));
+        } else {
+            holder.getBinding().getRoot().setBackgroundColor(context.getResources().getColor(com.google.android.material.R.color.m3_ref_palette_white));
+        }
     }
 
 }

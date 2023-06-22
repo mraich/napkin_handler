@@ -80,7 +80,7 @@ public class HomeFragment extends Fragment {
         binding.newPicturesGallery.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
         binding.newPicturesGallery.setAdapter(newPicturesGalleryAdapter);
 
-        categoryAdapter = new CategoryAdapter(getContext(), getActivity());
+        categoryAdapter = new CategoryAdapter(getContext(), getActivity(), categorySelectorViewModel);
         binding.categoriesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
         binding.categoriesRecyclerView.setAdapter(categoryAdapter);
 
@@ -187,6 +187,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void onSelectedCategoriesChanged(Set<Long> selectedCategories) {
+        categoryAdapter.setSelectedCategories(selectedCategories);
     }
 
     /**
