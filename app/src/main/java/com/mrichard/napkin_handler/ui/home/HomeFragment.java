@@ -28,6 +28,7 @@ import com.mrichard.napkin_handler.data.db.NapkinDB;
 import com.mrichard.napkin_handler.data.image.ImageUtils;
 import com.mrichard.napkin_handler.data.image_recognition.ImageRecognizerStore;
 import com.mrichard.napkin_handler.data.model.category.Category;
+import com.mrichard.napkin_handler.data.model.category_of_picture.CategoryOfPicture;
 import com.mrichard.napkin_handler.data.model.picture.Picture;
 import com.mrichard.napkin_handler.data.viewmodel.SelectorViewModelBase;
 import com.mrichard.napkin_handler.databinding.FragmentHomeBinding;
@@ -37,6 +38,7 @@ import com.mrichard.napkin_handler.ui.dashboard.MultipleCategorySelectorViewMode
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -200,7 +202,19 @@ public class HomeFragment extends Fragment {
         if (!selectedPictures.isEmpty()) {
             Long selectedPictureId = selectedPictures.iterator().next();
 
-            napkinDB.categoryOfPictureDao().getCategoriesOfPicture(selectedPictureId);
+            Thread thread = new Thread(() -> {
+                List<CategoryOfPicture> categoriesOfPicture = napkinDB.categoryOfPictureDao().getCategoriesOfPicture(selectedPictureId);
+                Set<Long> categories = new HashSet<>();
+                for (CategoryOfPicture categoryOfPicture: categoriesOfPicture) {
+                    categories.add(new Long(categoryOfPicture.getCategoryId()));
+                }
+                getActivity().runOnUiThread(() -> {
+                    categorySelectorViewModel.setSelected(categories);
+                });
+            });
+            thread.start();
+        } else {
+            categorySelectorViewModel.clearSelection();
         }
     }
 
