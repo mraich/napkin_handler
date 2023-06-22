@@ -17,12 +17,16 @@ public abstract class SelectorViewModelBase extends ViewModel {
     protected MutableLiveData<Set<Long>> selected = new MutableLiveData<>();
 
     public SelectorViewModelBase() {
-        selected.setValue(new HashSet<>());
+        setSelected(new HashSet<>());
     }
 
     public LiveData<Set<Long>> selected() {
         return selected;
     }
+
+    public void setSelected(Set<Long> selected_) { selected.setValue(selected_); }
+
+    public void clearSelection() { selected.setValue(new HashSet<>()); }
 
     public abstract void onClickPicture(Long id);
 
