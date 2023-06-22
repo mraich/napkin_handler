@@ -33,6 +33,7 @@ import com.mrichard.napkin_handler.data.viewmodel.SelectorViewModelBase;
 import com.mrichard.napkin_handler.databinding.FragmentHomeBinding;
 import com.mrichard.napkin_handler.ui.adapter.CategoryAdapter;
 import com.mrichard.napkin_handler.ui.adapter.PictureGalleryAdapter;
+import com.mrichard.napkin_handler.ui.dashboard.MultipleCategorySelectorViewModel;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,6 +54,8 @@ public class HomeFragment extends Fragment {
 
     private SelectorViewModelBase napkinSelectorViewModel;
 
+    private SelectorViewModelBase categorySelectorViewModel;
+
     private ImageUtils imageUtils;
 
     private File imageFile;
@@ -62,6 +65,9 @@ public class HomeFragment extends Fragment {
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
 
         napkinSelectorViewModel = new ViewModelProvider(this).get(SingleNapkinSelectorViewModel.class);
+
+        categorySelectorViewModel = new ViewModelProvider(this).get(MultipleCategorySelectorViewModel.class);
+
         // Antipattern, but works.
         napkinDB = NapkinDB.GetInstance(getContext());
         imageUtils = new ImageUtils();
@@ -149,6 +155,8 @@ public class HomeFragment extends Fragment {
         // We show the available categories automatically.
         napkinDB.categoryDao().getAll().observe(getViewLifecycleOwner(), this::onCategoriesChanged);
 
+        categorySelectorViewModel.selected().observe(getViewLifecycleOwner(), this::onSelectedCategoriesChanged);
+
         napkinSelectorViewModel.selected().observe(getViewLifecycleOwner(), this::onSelectedPicturesChanged);
 
         return root;
@@ -178,12 +186,21 @@ public class HomeFragment extends Fragment {
         getActivity().runOnUiThread(() -> categoryAdapter.setCategories(newCategories));
     }
 
+    private void onSelectedCategoriesChanged(Set<Long> selectedCategories) {
+    }
+
     /**
      * Marking the selected pictures.
      * @param selectedPictures The ids of the selected pictures.
      */
     private void onSelectedPicturesChanged(Set<Long> selectedPictures) {
         newPicturesGalleryAdapter.setSelectedPictures(selectedPictures);
+
+        if (!selectedPictures.isEmpty()) {
+            Long selectedPictureId = selectedPictures.iterator().next();
+
+            napkinDB.categoryOfPictureDao().getCategoriesOfPicture(selectedPictureId);
+        }
     }
 
     /**
